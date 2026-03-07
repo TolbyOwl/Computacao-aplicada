@@ -1,2 +1,2 @@
-# Computa-o-aplicada
+# Computação Aplicada
 Projeto em Computação aplicada
