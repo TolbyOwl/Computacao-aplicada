@@ -1,0 +1,11 @@
+.patient-dashboard-container {
+  @apply min-h-screen bg-background-light p-6 md:p-12 font-sans antialiased text-text-main;
+}
+
+.patient-dashboard-content {
+  @apply max-w-5xl mx-auto z-10 relative flex flex-col gap-8;
+}
+
+.card-soft {
+  @apply bg-white rounded-[24px] p-8 shadow-sm border border-[#EBE5E0]/50;
+}

@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background-light text-text-main antialiased selection:bg-primary/20 selection:text-primary;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+}
+
+@layer components {
+  /* Cards */
+  .card-soft {
+    @apply bg-white border border-[#EBE5E0] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)];
+  }
+
+  /* Botões principais */
+  .btn-primary {
+    @apply flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white text-sm font-bold px-6 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+  
+  .btn-secondary {
+    @apply flex items-center justify-center gap-2 bg-text-main hover:bg-black text-white text-sm font-bold px-6 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline {
+    @apply flex items-center justify-center gap-2 bg-transparent border border-[#EBE5E0] hover:border-primary text-text-muted hover:text-primary text-sm font-bold px-6 py-2.5 rounded-xl transition-all active:scale-95;
+  }
+}
+
+/* Utilitário para ocultar scrollbars nativas mas manter funcionalidade */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE e Edge */
+  scrollbar-width: none;  /* Firefox */
+}
