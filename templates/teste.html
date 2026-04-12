@@ -1,0 +1,28 @@
+
+USAR ISSO COMO BASE PARA A LISTAGEM DE PACIENTES
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='teste.css') }}">
+</head>
+<body>
+{% for post in posts %}
+<div class="post">
+    <h2>{{ post.nome_cliente }} {{ post.sobrenome_cliente }}</h2>
+    <p>{{ post.email }}</p>
+    <p>{{ post.telefone_ddd }} - {{ post.telefone }}</p>
+    <p>{{ post.horario_da_consulta }}</p>
+    <div class="meta">Created at: {{ post.created_at }}</div>
+    <a class="btn edit-btn" href="/edit/{{ post.id }}">Edit</a>
+    <a class="btn delete-btn" href="/delete/{{ post.id }}">Delete</a>
+</div>
+{% endfor %}
+</body>
+</html>
