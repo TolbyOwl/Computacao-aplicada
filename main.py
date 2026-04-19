@@ -26,7 +26,6 @@ def home():
         .execute()
         return render_template('teste.html', posts=posts.data)
     return render_template('home.html')
-    print("Hello World")
 
 
 if __name__ == '__main__':
