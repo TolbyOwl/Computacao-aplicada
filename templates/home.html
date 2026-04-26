@@ -1,20 +1,725 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div> {{ mensagem }} </div>
-    <form method="post">
-        <input type="text" name="Nome" placeholder="Seu nome">
-        <input type="text" name="Sobrenome" placeholder="Seu sobrenome">
-        <input type="number" name="DDD" placeholder="DDD">
-        <input type="number" name="Telefone" placeholder="Seu telefone">
-        <input type="text" name="Email" placeholder="Seu email">
-        <input type="time" name="Horario" placeholder="Horário desejado">
-        <button type="submit">Submit</button>
-    </form>
-</body>
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Clínica de Psicologia — Cuidado para sua Mente</title>
+    <meta
+      name="description"
+      content="Clínica de Psicologia com atendimento humanizado, psicólogos especializados e agendamento de consultas. Cuide da sua saúde mental conosco."
+    />
+    <meta
+      name="keywords"
+      content="psicologia, psicólogo, saúde mental, terapia, clínica psicológica, bem-estar"
+    />
+
+    <!-- fontes do google -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- icones  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <!-- icones -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <!-- css principal -->
+    <link href="styles.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <!-- cabecalho do site  -->
+    <header id="header" class="site-header">
+      <!-- faixinha com horario -->
+      <div class="topbar">
+        <div class="topbar-inner">
+          <div class="topbar-info">
+            <i class="bi bi-clock"></i>
+            <span>Segunda a Sexta, 8h às 20h | Sábado, 8h às 14h</span>
+          </div>
+          <div class="topbar-contact">
+            <i class="bi bi-telephone"></i>
+            <span>(11) 9 8765-4321</span>
+            <span class="topbar-divider">|</span>
+            <i class="bi bi-envelope"></i>
+            <span>contato@clinicapsico.com.br</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- caixa branca com logo e menus -->
+      <div class="branding">
+        <div class="branding-inner">
+          <!-- icone e um titulo -->
+          <a href="#hero" class="logo">
+            <div class="logo-icon">
+              <i class="fa-solid fa-brain"></i>
+            </div>
+            <div class="logo-text">
+              <span class="logo-name">Nome genérico da Silva</span>
+              <span class="logo-tagline">Clínica de Psicologia</span>
+            </div>
+          </a>
+
+          <!-- parte dos links  -->
+          <nav id="navmenu" class="navmenu">
+            <ul>
+              <li><a href="#hero" class="active">Início</a></li>
+              <li><a href="#about">Sobre Nós</a></li>
+              <li><a href="#services">Serviços</a></li>
+              <li><a href="#specialists">Psicólogos</a></li>
+              <li><a href="#faq">Dúvidas</a></li>
+              <li><a href="#contact">Contato</a></li>
+            </ul>
+            <button
+              class="mobile-nav-toggle"
+              id="mobileNavToggle"
+              aria-label="Menu"
+            >
+              <i class="bi bi-list"></i>
+            </button>
+          </nav>
+
+          <!--  botao chamativo  -->
+          <a class="header-cta" href="#appointment">Agendar Consulta</a>
+        </div>
+      </div>
+    </header>
+    <!-- fim da secao  -->
+
+    <main>
+      <!-- area principal  -->
+      <section id="hero" class="hero-section">
+        <div class="hero-slider" id="heroSlider">
+          <div class="hero-slide active">
+            <div
+              class="hero-bg"
+              style="
+                background-image: url(&quot;https://images.pexels.com/photos/6382633/pexels-photo-6382633.jpeg?h=1000&w=1500&fit=crop&markalign=center%2Cmiddle&txt=pexels.com&txtalign=center&txtsize=60&txtclr=eeffffff&txtfont=Avenir-Heavy&txtshad=10&mark=https:%2F%2Fassets.imgix.net%2F~text%3Ftxtclr%3Dfff%26txtsize%3D120%26txtpad%3D20%26bg%3D80000000%26txtfont%3DAvenir-Heavy%26txtalign%3Dcenter%26w%3D1300%26txt%3DFotos%2520profissionais%2520gratuitas&quot;);
+              "
+            ></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <span class="hero-badge">Cuidando de quem você é</span>
+              <h1>Sua saúde mental merece atenção especializada</h1>
+              <p>
+                Oferecemos atendimento psicológico humanizado com profissionais
+                qualificados, prontos para acompanhar sua jornada de bem-estar.
+              </p>
+              <div class="hero-buttons">
+                <a href="#appointment" class="btn-hero-primary"
+                  >Agendar Consulta</a
+                >
+                <a href="#about" class="btn-hero-secondary"
+                  >Conheça a Clínica</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-slide">
+            <div
+              class="hero-bg"
+              style="
+                background-image: url(&quot;https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg?fit=crop&h=1000&mark=https:%2F%2Fassets.imgix.net%2F~text%3Fbg%3D80000000%26txt%3DFotos%2Bprofissionais%2Bgratuitas%26txtalign%3Dcenter%26txtclr%3Dfff%26txtfont%3DAvenir-Heavy%26txtpad%3D20%26txtsize%3D120%26w%3D1300&markalign=center%2Cmiddle&txt=pexels.com&txtalign=center&txtclr=eeffffff&txtfont=Avenir-Heavy&txtshad=10&txtsize=60&w=1500&quot;);
+              "
+            ></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <span class="hero-badge">Atendimento Humanizado</span>
+              <h1>Terapia no seu tempo, do seu jeito</h1>
+              <p>
+                Agende sua consulta com facilidade e discrição. Proporcionamos um
+                ambiente seguro e acolhedor para o seu desenvolvimento pessoal e
+                bem-estar.
+              </p>
+              <div class="hero-buttons">
+                <a href="#appointment" class="btn-hero-primary"
+                  >Agendar Consulta</a
+                >
+                <a href="#services" class="btn-hero-secondary">Ver Serviços</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-slide">
+            <div
+              class="hero-bg"
+              style="
+                background-image: url(&quot;https://images.pexels.com/photos/5336955/pexels-photo-5336955.jpeg?h=1000&w=1500&fit=crop&markalign=center%2Cmiddle&txt=pexels.com&txtalign=center&txtsize=60&txtclr=eeffffff&txtfont=Avenir-Heavy&txtshad=10&mark=https:%2F%2Fassets.imgix.net%2F~text%3Ftxtclr%3Dfff%26txtsize%3D120%26txtpad%3D20%26bg%3D80000000%26txtfont%3DAvenir-Heavy%26txtalign%3Dcenter%26w%3D1300%26txt%3DFotos%2520profissionais%2520gratuitas&quot;);
+              "
+            ></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <span class="hero-badge">Equipe Multidisciplinar</span>
+              <h1>Psicólogos especializados em diversas abordagens</h1>
+              <p>
+                Nossa equipe conta com especialistas em TCC, psicanálise,
+                terapia humanista e muito mais, para atender cada pessoa em sua
+                singularidade.
+              </p>
+              <div class="hero-buttons">
+                <a href="#specialists" class="btn-hero-primary"
+                  >Conheça Nossa Equipe</a
+                >
+                <a href="#about" class="btn-hero-secondary">Saiba Mais</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- controles bolinha e setinha -->
+          <button class="hero-prev" id="heroPrev" aria-label="Anterior">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button class="hero-next" id="heroNext" aria-label="Próximo">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+          <div class="hero-indicators" id="heroIndicators"></div>
+        </div>
+      </section>
+      <!-- encerra a img gigante -->
+
+      <!-- quadradinhos -->
+      <section class="featured-strip">
+        <div class="container">
+          <div class="featured-grid">
+            <div class="featured-card" data-aos="fade-up" data-aos-delay="100">
+              <div class="featured-icon">
+                <i class="fa-solid fa-brain"></i>
+              </div>
+              <h4>Psicoterapia Individual</h4>
+              <p>
+                Atendimento personalizado para adultos, adolescentes e crianças
+                em diversas abordagens terapêuticas.
+              </p>
+            </div>
+
+            <div class="featured-card" data-aos="fade-up" data-aos-delay="200">
+              <div class="featured-icon">
+                <i class="fa-solid fa-heart-pulse"></i>
+              </div>
+              <h4>Saúde Emocional</h4>
+              <p>
+                Suporte especializado para ansiedade, depressão, estresse e
+                outros desafios emocionais do dia a dia.
+              </p>
+            </div>
+
+            <div class="featured-card" data-aos="fade-up" data-aos-delay="300">
+              <div class="featured-icon">
+                <i class="fa-solid fa-people-group"></i>
+              </div>
+              <h4>Terapia de Casal e Família</h4>
+              <p>
+                Mediação e suporte terapêutico para relações e dinâmicas
+                familiares mais saudáveis e harmoniosas.
+              </p>
+            </div>
+
+            <div class="featured-card" data-aos="fade-up" data-aos-delay="400">
+              <div class="featured-icon">
+                <i class="fa-solid fa-calendar-days"></i>
+              </div>
+              <h4>Agendamento Prático</h4>
+              <p>
+                Marque sua consulta de forma simples e direta, escolhendo o
+                melhor horário para o seu atendimento.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- fim quadradinhos -->
+
+      <!-- alerta -->
+      <section class="cta-banner">
+        <div class="container">
+          <div class="cta-content">
+            <div class="cta-text">
+              <i class="fa-solid fa-circle-exclamation cta-icon"></i>
+              <div>
+                <h3>Está passando por um momento difícil?</h3>
+                <p>
+                  Não enfrente isso sozinho. Nossa equipe está pronta para
+                  acolher você com empatia e profissionalismo.
+                </p>
+              </div>
+            </div>
+            <a class="cta-link-btn" href="#appointment">Agendar Agora</a>
+          </div>
+        </div>
+      </section>
+      <!-- fim alerta -->
+
+      <!-- sobre a clinica -->
+      <section id="about" class="about-section section">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Sobre a Clínica</h2>
+            <p>
+              Conheça nossa história, missão e os valores que guiam cada
+              atendimento
+            </p>
+          </div>
+
+          <div class="about-grid">
+            <div class="about-image" data-aos="fade-right" data-aos-delay="100">
+              <img
+                src="https://images.pexels.com/photos/1181715/pexels-photo-1181715.jpeg?h=1000&w=1500&fit=crop&markalign=center%2Cmiddle&txt=pexels.com&txtalign=center&txtsize=60&txtclr=eeffffff&txtfont=Avenir-Heavy&txtshad=10&mark=https:%2F%2Fassets.imgix.net%2F~text%3Ftxtclr%3Dfff%26txtsize%3D120%26txtpad%3D20%26bg%3D80000000%26txtfont%3DAvenir-Heavy%26txtalign%3Dcenter%26w%3D1300%26txt%3DFotos%2520profissionais%2520gratuitas"
+                alt="Psicóloga em atendimento"
+              />
+              <div class="about-image-badge">
+                <span class="badge-number">+10</span>
+                <span class="badge-label">Anos de experiência</span>
+              </div>
+            </div>
+
+            <div
+              class="about-content"
+              data-aos="fade-left"
+              data-aos-delay="200"
+            >
+              <span class="section-eyebrow">Nossa Missão</span>
+              <h3>Comprometidos com o seu bem-estar psicológico</h3>
+              <p class="about-lead">
+                A Nome genérico da Silva nasceu da crença de que cuidar da saúde
+                mental é tão essencial quanto cuidar do corpo. Oferecemos um
+                espaço seguro, acolhedor e livre de julgamentos.
+              </p>
+              <ul class="about-list">
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span
+                    >Psicólogos com registro ativo no CRP e especializações
+                    comprovadas.</span
+                  >
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span
+                    >Atendimento ético, sigiloso e alinhado ao Código de Ética
+                    da Psicologia.</span
+                  >
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span
+                    >Ambiente acolhedor, moderno e preparado para diferentes
+                    necessidades.</span
+                  >
+                </li>
+                <li>
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span
+                    >Flexibilidade de horários e facilidade para agendar sua
+                    primeira sessão.</span
+                  >
+                </li>
+              </ul>
+              <a href="#appointment" class="btn-outline-primary"
+                >Agende sua consulta inicial</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- fim sobre a clinica -->
+
+      <!-- numeros que sobem (exemplo: 0 a 100) -->
+      <section class="stats-section">
+        <div class="container">
+          <div class="stats-grid">
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+              <i class="fa-solid fa-user-doctor"></i>
+              <div class="stat-content">
+                <span class="stat-number" data-target="18">0</span>
+                <p>Psicólogos Especialistas</p>
+              </div>
+            </div>
+
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+              <i class="fa-solid fa-users"></i>
+              <div class="stat-content">
+                <span class="stat-number" data-target="1200">0</span>
+                <p>Pacientes Atendidos</p>
+              </div>
+            </div>
+
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+              <i class="fa-solid fa-calendar-check"></i>
+              <div class="stat-content">
+                <span class="stat-number" data-target="5000">0</span>
+                <p>Sessões Realizadas</p>
+              </div>
+            </div>
+
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
+              <i class="fa-solid fa-star"></i>
+              <div class="stat-content">
+                <span class="stat-number" data-target="98">0</span
+                ><span class="stat-suffix">%</span>
+                <p>Taxa de Satisfação</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- fim dos numeros -->
+
+      <!-- lista  -->
+      <section id="services" class="services-section section">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Nossos Serviços</h2>
+            <p>
+              Abordagens terapêuticas e serviços pensados para o seu cuidado
+              integral
+            </p>
+          </div>
+
+          <div class="services-grid">
+            <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+              <div class="service-icon">
+                <i class="fa-solid fa-brain"></i>
+              </div>
+              <h3>Terapia Cognitivo-Comportamental</h3>
+              <p>
+                Abordagem focada em identificar e modificar padrões de
+                pensamento disfuncionais que afetam emoções e comportamentos.
+              </p>
+            </div>
+
+            <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+              <div class="service-icon">
+                <i class="fa-solid fa-couch"></i>
+              </div>
+              <h3>Psicanálise e Psicoterapia</h3>
+              <p>
+                Exploração profunda do inconsciente para compreender conflitos
+                internos e promover autoconhecimento e crescimento pessoal.
+              </p>
+            </div>
+
+            <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+              <div class="service-icon">
+                <i class="fa-solid fa-child-reaching"></i>
+              </div>
+              <h3>Psicologia Infantil</h3>
+              <p>
+                Atendimento especializado para crianças, com abordagens lúdicas
+                para desenvolvimento emocional, comportamental e de
+                aprendizagem.
+              </p>
+            </div>
+
+            <div class="service-card" data-aos="fade-up" data-aos-delay="400">
+              <div class="service-icon">
+                <i class="fa-solid fa-person-dots-from-line"></i>
+              </div>
+              <h3>Avaliação Psicológica</h3>
+              <p>
+                Laudos e relatórios psicológicos para fins clínicos,
+                educacionais e ocupacionais, com metodologia rigorosa e ética.
+              </p>
+            </div>
+
+            <div class="service-card" data-aos="fade-up" data-aos-delay="500">
+              <div class="service-icon">
+                <i class="fa-solid fa-briefcase"></i>
+              </div>
+              <h3>Psicologia Organizacional</h3>
+              <p>
+                Suporte para saúde mental no trabalho, prevenção de burnout,
+                gestão de estresse e desenvolvimento de lideranças saudáveis.
+              </p>
+            </div>
+
+            <div class="service-card" data-aos="fade-up" data-aos-delay="600">
+              <div class="service-icon">
+                <i class="fa-solid fa-hands-holding-heart"></i>
+              </div>
+              <h3>Grupos Terapêuticos</h3>
+              <p>
+                Sessões em grupo mediadas por psicólogos especializados,
+                promovendo conexão, troca de experiências e crescimento
+                coletivo.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- fim da lista -->
+
+      <!-- form de contato -->
+      <section id="appointment" class="appointment-section section">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Agende sua Consulta</h2>
+            <p>
+              Preencha o formulário e entraremos em contato em até 24 horas
+              úteis para confirmar seu horário
+            </p>
+          </div>
+
+          <div
+            class="appointment-wrapper"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
+            <form id="appointmentForm" class="appointment-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="appt-name"
+                    ><i class="bi bi-person"></i> Nome Completo</label
+                  >
+                  <input
+                    type="text"
+                    id="appt-name"
+                    placeholder="Seu nome completo"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="appt-email"
+                    ><i class="bi bi-envelope"></i> E-mail</label
+                  >
+                  <input
+                    type="email"
+                    id="appt-email"
+                    placeholder="seu@email.com"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="appt-phone"
+                    ><i class="bi bi-telephone"></i> Telefone/WhatsApp</label
+                  >
+                  <input
+                    type="tel"
+                    id="appt-phone"
+                    placeholder="(11) 9 0000-0000"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="appt-date"
+                    ><i class="bi bi-calendar3"></i> Data Preferida</label
+                  >
+                  <input type="date" id="appt-date" required />
+                </div>
+                <div class="form-group">
+                  <label for="appt-service"
+                    ><i class="bi bi-list-check"></i> Serviço Desejado</label
+                  >
+                  <select id="appt-service" required>
+                    <option value="">Selecione um serviço</option>
+                    <option value="individual">Psicoterapia Individual</option>
+                    <option value="casal">Terapia de Casal</option>
+                    <option value="familia">Terapia Familiar</option>
+                    <option value="infantil">Psicologia Infantil</option>
+                    <option value="avaliacao">Avaliação Psicológica</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group form-group-full">
+                <label for="appt-message"
+                  ><i class="bi bi-chat-text"></i> Mensagem (opcional)</label
+                >
+                <textarea
+                  id="appt-message"
+                  rows="4"
+                  placeholder="Conte brevemente o que te trouxe até aqui. Isso nos ajuda a indicar o profissional mais adequado."
+                ></textarea>
+              </div>
+              <div class="form-submit">
+                <div class="form-notice">
+                  <i class="bi bi-shield-lock"></i> Seus dados são protegidos e
+                  mantidos em total sigilo.
+                </div>
+                <button type="submit" id="submitBtn">
+                  <i class="bi bi-calendar-plus"></i>
+                  Solicitar Agendamento
+                </button>
+              </div>
+              <div class="form-feedback" id="formFeedback"></div>
+            </form>
+          </div>
+        </div>
+      </section>
+      <!-- fim do form -->
+
+      <!--  abas clicaveis  -->
+      <section id="approaches" class="approaches-section section">
+        <div class="container">
+          <div class="section-title" data-aos="fade-up">
+            <h2>Abordagens Terapêuticas</h2>
+            <p>
+              Conheça as principais linhas de atuação dos nossos profissionais
+            </p>
+          </div>
+
+          <div class="tabs-wrapper" data-aos="fade-up" data-aos-delay="100">
+            <div class="tabs-nav">
+              <button class="tab-btn active" data-tab="tcc">TCC</button>
+              <button class="tab-btn" data-tab="psicanalise">
+                Psicanálise
+              </button>
+              <button class="tab-btn" data-tab="humanista">Humanista</button>
+              <button class="tab-btn" data-tab="gestalt">Gestalt</button>
+              <button class="tab-btn" data-tab="mindfulness">
+                Mindfulness
+              </button>
+            </div>
+
+            <div class="tabs-content">
+              <div class="tab-pane active" id="tab-tcc">
+                <div class="tab-inner">
+                  <div class="tab-text">
+                    <h3>Terapia Cognitivo-Comportamental (TCC)</h3>
+                    <p class="tab-lead">
+                      Uma das abordagens mais estudadas e validadas
+                      cientificamente do mundo.
+                    </p>
+                    <p>
+                      A TCC trabalha a relação entre pensamentos, emoções e
+                      comportamentos. É eficaz no tratamento de ansiedade,
+                      depressão, fobias, TOC, transtornos alimentares e muitos
+                      outros. O foco é no presente, com metas claras e
+                      resultados mensuráveis.
+                    </p>
+                  </div>
+                  <div class="tab-image">
+                    <img
+                      src="https://images.pexels.com/photos/4098236/pexels-photo-4098236.jpeg?h=1000&w=1500&fit=crop&markalign=center%2Cmiddle&txt=pexels.com&txtalign=center&txtsize=60&txtclr=eeffffff&txtfont=Avenir-Heavy&txtshad=10&mark=https:%2F%2Fassets.imgix.net%2F~text%3Ftxtclr%3Dfff%26txtsize%3D120%26txtpad%3D20%26bg%3D80000000%26txtfont%3DAvenir-Heavy%26txtalign%3Dcenter%26w%3D1300%26txt%3DFotos%2520profissionais%2520gratuitas"
+                      alt="Terapia Cognitivo-Comportamental"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="tab-psicanalise">
+                <div class="tab-inner">
+                  <div class="tab-text">
+                    <h3>Psicanálise</h3>
+                    <p class="tab-lead">
+                      Uma viagem ao que há de mais profundo em você.
+                    </p>
+                    <p>
+                      Baseada nos estudos de Freud, Jung e seus seguidores, a
+                      psicanálise explora o inconsciente, os sonhos, os traumas
+                      e as origens dos conflitos internos. É uma abordagem de
+                      profundo autoconhecimento e transformação subjetiva.
+                    </p>
+                  </div>
+                  <div class="tab-image">
+                    <img
+                      src="https://images.pexels.com/photos/7176319/pexels-photo-7176319.jpeg?h=1000&w=1500&fit=crop&markalign=center%2Cmiddle&txt=pexels.com&txtalign=center&txtsize=60&txtclr=eeffffff&txtfont=Avenir-Heavy&txtshad=10&mark=https:%2F%2Fassets.imgix.net%2F~text%3Ftxtclr%3Dfff%26txtsize%3D120%26txtpad%3D20%26bg%3D80000000%26txtfont%3DAvenir-Heavy%26txtalign%3Dcenter%26w%3D1300%26txt%3DFotos%2520profissionais%2520gratuitas"
+                      alt="Psicanálise"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="tab-humanista">
+                <div class="tab-inner">
+                  <div class="tab-text">
+                    <h3>Abordagem Humanista</h3>
+                    <p class="tab-lead">
+                      Centrando o ser humano no coração da terapia.
+                    </p>
+                    <p>
+                      A psicologia humanista, com destaque para a Abordagem
+                      Centrada na Pessoa de Carl Rogers, parte da crença na
+                      capacidade natural de crescimento de cada indivíduo. O
+                      terapeuta atua como facilitador, criando um espaço de
+                      aceitação e empatia.
+                    </p>
+                  </div>
+                  <div class="tab-image">
+                    <img
+                      src="https://images.pexels.com/photos/6382633/pexels-photo-6382633.jpeg?h=1000&w=1500&fit=crop&markalign=center%2Cmiddle&txt=pexels.com&txtalign=center&txtsize=60&txtclr=eeffffff&txtfont=Avenir-Heavy&txtshad=10&mark=https:%2F%2Fassets.imgix.net%2F~text%3Ftxtclr%3Dfff%26txtsize%3D120%26txtpad%3D20%26bg%3D80000000%26txtfont%3DAvenir-Heavy%26txtalign%3Dcenter%26w%3D1300%26txt%3DFotos%2520profissionais%2520gratuitas"
+                      alt="Abordagem Humanista"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="tab-gestalt">
+                <div class="tab-inner">
+                  <div class="tab-text">
+                    <h3>Gestalt-Terapia</h3>
+                    <p class="tab-lead">
+                      Presença, contato e o poder do aqui e agora.
+                    </p>
+                    <p>
+                      A Gestalt-terapia foca na experiência presente e no
+                      contato do indivíduo com seu ambiente. Estimula a
+                      consciência das emoções no momento vivido, trabalhando
+                      questões inacabadas que afetam o modo como a pessoa se
+                      relaciona consigo e com os outros.
+                    </p>
+                  </div>
+                  <div class="tab-image">
+                    <img
+                      src="https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg?fit=crop&h=1000&mark=https:%2F%2Fassets.imgix.net%2F~text%3Fbg%3D80000000%26txt%3DFotos%2Bprofissionais%2Bgratuitas%26txtalign%3Dcenter%26txtclr%3Dfff%26txtfont%3DAvenir-Heavy%26txtpad%3D20%26txtsize%3D120%26w%3D1300&markalign=center%2Cmiddle&txt=pexels.com&txtalign=center&txtclr=eeffffff&txtfont=Avenir-Heavy&txtshad=10&txtsize=60&w=1500"
+                      alt="Gestalt-Terapia"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="tab-mindfulness">
+                <div class="tab-inner">
+                  <div class="tab-text">
+                    <h3>Mindfulness e Terapias de 3ª Onda</h3>
+                    <p class="tab-lead">
+                      Atenção plena como caminho para o equilíbrio emocional.
+                    </p>
+                    <p>
+                      As terapias baseadas em mindfulness (atenção plena), como
+                      ACT e DBT, integram práticas meditativas à psicoterapia.
+                      São indicadas para manejo de estresse, ansiedade
+                      generalizada, regulação emocional e promoção de bem-estar
+                      duradouro.
+                    </p>
+                  </div>
+                  <div class="tab-image">
+                    <img
+                      src="https://images.pexels.com/photos/5336955/pexels-photo-5336955.jpeg?h=1000&w=1500&fit=crop&markalign=center%2Cmiddle&txt=pexels.com&txtalign=center&txtsize=60&txtclr=eeffffff&txtfont=Avenir-Heavy&txtshad=10&mark=https:%2F%2Fassets.imgix.net%2F~text%3Ftxtclr%3Dfff%26txtsize%3D120%26txtpad%3D20%26bg%3D80000000%26txtfont%3DAvenir-Heavy%26txtalign%3Dcenter%26w%3D1300%26txt%3DFotos%2520profissionais%2520gratuitas"
+                      alt="Mindfulness"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- fim abas clicaveis -->
+
+    <!-- seta que sobe -->
+    <a
+      href="#hero"
+      id="scrollTop"
+      class="scroll-top-btn"
+      aria-label="Voltar ao topo"
+    >
+      <i class="bi bi-arrow-up-short"></i>
+    </a>
+
+    <!-- referenciando js para a animacao e interacao dos botoes -->
+    <script src="script.js"></script>
+  </body>
 </html>
