@@ -1,0 +1,164 @@
+ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  background: #f5f1ee;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 90px;
+  background: #fff;
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo */
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+/* Menu */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.item {
+  width: 50px;
+  height: 50px;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  text-align: center;
+}
+
+.item.active {
+  border-color: #a9785a;
+  color: #a9785a;
+}
+
+/* Config */
+.config {
+  width: 50px;
+  height: 50px;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Linha superior */
+.top-row {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.welcome {
+  border: 2px dashed #ccc;
+  padding: 15px;
+  text-align: center;
+}
+
+.notifications {
+  border: 2px dashed #ccc;
+  padding: 15px;
+  text-align: center;
+}
+
+/* Próxima sessão */
+.next-session {
+  border: 2px dashed #ccc;
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Parte inferior */
+.bottom {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 20px;
+}
+
+/* Agenda */
+.agenda {
+  border: 2px dashed #ccc;
+  padding: 20px;
+}
+
+.agenda h4 {
+  color: #777;
+  margin-bottom: 20px;
+}
+
+/* Eventos */
+.event {
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  border: 2px dashed;
+  text-align: center;
+  font-size: 13px;
+}
+
+/* Cores iguais ao print */
+.event.online {
+  background: #e6f0fb;
+  border-color: #b7d0f5;
+  color: #6b9bd6;
+}
+
+.event.done {
+  background: #e8f5ec;
+  border-color: #bfe3c8;
+  color: #6bb07f;
+}
+
+.event.urgent {
+  background: #fbeaea;
+  border-color: #e5bcbc;
+  color: #c46b6b;
+}
+
+/* Resumo */
+.summary {
+  border: 2px dashed #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}

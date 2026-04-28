@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">LOGO & TÍTULO</div>
+
+    <div class="profile">
+      <p>Perfil do Psicólogo</p>
+    </div>
+
+    <nav>
+      <a href="#">Menu 1</a>
+      <a href="#" class="active">Pacientes</a>
+      <a href="#">Menu 3</a>
+      <a href="#">Menu 4</a>
+      <a href="#">Menu 5</a>
+    </nav>
+
+    <button class="btn secondary">Google Calendar</button>
+    <button class="btn primary">Nova Sessão</button>
+  </aside>
+
+  <!-- Conteúdo -->
+  <main class="main">
+
+    <!-- Topo -->
+    <div class="top">
+      <div class="title">Meus Pacientes</div>
+      <div class="actions">
+        <input type="text" placeholder="Buscar...">
+        <button class="btn dark">Novo</button>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters">
+      <button class="active">Todos</button>
+      <button>Ativos</button>
+      <button>Pausa</button>
+      <button>Alta</button>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards">
+
+      <!-- Card -->
+      <div class="card">
+        <div class="avatar"></div>
+        <h3>Nome do Paciente</h3>
+        <span class="status">Status online</span>
+
+        <div class="sessions">
+          <div>Última Sessão</div>
+          <div>Próxima Sessão</div>
+        </div>
+
+        <div class="card-footer">
+          <div class="icons">💬 📄</div>
+          <a href="#">Ver Perfil →</a>
+        </div>
+      </div>
+
+      <!-- Repete -->
+      <div class="card"></div>
+      <div class="card"></div>
+
+      <!-- Card adicionar -->
+      <div class="card add">
+        <span>+</span>
+        <p>Adicionar Novo</p>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>
