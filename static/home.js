@@ -325,6 +325,7 @@
   // validacao do form de agendamento
   const appointmentForm = document.getElementById("appointmentForm");
   const formFeedbackEl = document.getElementById("formFeedback");
+  let response;
 
   if (appointmentForm) {
     // travar preencher data
@@ -334,19 +335,29 @@
       dateInput.setAttribute("min", today);
     }
 
-    appointmentForm.addEventListener("submit", (e) => {
+    appointmentForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const btn = document.getElementById("submitBtn");
       btn.disabled = true;
       btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
 
+      try {
+      const formData = new FormData(appointmentForm);
+      response = await fetch("", {
+        method: "POST",
+        body: formData,
+      });
+      console.log(await response.json());}
+      catch (error) {console.error(error);}
+
+
       setTimeout(() => {
         btn.disabled = false;
         btn.innerHTML =
           '<i class="bi bi-calendar-plus"></i> Solicitar Agendamento';
 
-        if (formFeedbackEl) {
+        if (response.status == "success") {
           formFeedbackEl.className = "form-feedback success";
           formFeedbackEl.innerHTML =
             "✅ Solicitação enviada! Entraremos em contato em até 24 horas úteis para confirmar seu agendamento.";
@@ -354,52 +365,35 @@
             behavior: "smooth",
             block: "nearest",
           });
-        }
 
-        appointmentForm.reset();
+          appointmentForm.reset();
 
-        // apaga e joga a data hoje
-        const dateInput = document.getElementById("appt-date");
-        if (dateInput) {
-          const today = new Date().toISOString().split("T")[0];
-          dateInput.setAttribute("min", today);
+          // apaga e joga a data hoje
+          const dateInput = document.getElementById("appt-date");
+          if (dateInput) {
+            const today = new Date().toISOString().split("T")[0];
+            dateInput.setAttribute("min", today);
+          }
         }
+        else if (response.status == "fail" && response.message.includes("Agendamento já existente")) {
+          formFeedbackEl.className = "form-feedback error";
+          formFeedbackEl.innerHTML = "⚠️ Parece que já existe um agendamento para este email e data. Por favor, verifique seus dados ou entre em contato conosco para gerenciar seus agendamentos.";
+          formFeedbackEl.scrollIntoView({
+            behavior: "smooth",
+          });
+        }
+        else {
+          formFeedbackEl.className = "form-feedback error";
+          formFeedbackEl.innerHTML = "❌ Ocorreu um erro ao enviar sua solicitação. Por favor, tente novamente mais tarde ou entre em contato conosco.";
+          formFeedbackEl.scrollIntoView({
+            behavior: "smooth",
+          });
+        } 
 
         setTimeout(() => {
           if (formFeedbackEl) formFeedbackEl.className = "form-feedback";
         }, 8000);
       }, 1200);
-    });
-  }
-
-  // form la debaixo do rodape
-  const contactForm = document.getElementById("contactForm");
-  const contactFeedback = document.getElementById("contactFeedback");
-
-  if (contactForm) {
-    contactForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const btn = contactForm.querySelector('button[type="submit"]');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
-
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-send"></i> Enviar Mensagem';
-
-        if (contactFeedback) {
-          contactFeedback.className = "contact-feedback success";
-          contactFeedback.innerHTML =
-            "✅ Mensagem enviada com sucesso! Responderemos em breve.";
-        }
-
-        contactForm.reset();
-
-        setTimeout(() => {
-          if (contactFeedback) contactFeedback.className = "contact-feedback";
-        }, 6000);
-      }, 1000);
     });
   }
 

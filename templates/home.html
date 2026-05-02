@@ -476,7 +476,7 @@
             data-aos="fade-up"
             data-aos-delay="100"
           >
-            <form id="appointmentForm" class="appointment-form">
+            <form id="appointmentForm" class="appointment-form" method="post">
               <div class="form-row">
                 <div class="form-group">
                   <label for="appt-name"
@@ -485,18 +485,19 @@
                   <input
                     type="text"
                     id="appt-name"
+                    name="appt-name"
                     placeholder="Seu nome completo"
                     required
                   />
                 </div>
-                              <div class="form-group">
-                  <label for="appt-name"
-                    ><i class="bi bi-person"></i>Sobrenome</label
-                  >
+                  <div class="form-group">
+                  <label for="appt-lastname"
+                    ><i class="bi bi-person"></i>Sobrenome</label>
                   <input
                     type="text"
-                    id="appt-name"
-                    placeholder="Seu nome completo"
+                    id="appt-lastname"
+                    name="appt-lastname"
+                    placeholder="Seu sobrenome"
                     required
                   />
                 </div>
@@ -507,6 +508,7 @@
                   <input
                     type="email"
                     id="appt-email"
+                    name="appt-email"
                     placeholder="seu@email.com"
                     required
                   />
@@ -518,6 +520,7 @@
                   <input
                     type="tel"
                     id="appt-phone"
+                    name="appt-phone"
                     placeholder="(11) 9 0000-0000"
                     required
                   />
@@ -528,13 +531,13 @@
                   <label for="appt-date"
                     ><i class="bi bi-calendar3"></i> Data Preferida</label
                   >
-                  <input type="date" id="appt-date" required />
+                  <input type="date" id="appt-date" name="appt-date" required />
                 </div>
                 <div class="form-group">
                   <label for="appt-service"
                     ><i class="bi bi-list-check"></i> Serviço Desejado</label
                   >
-                  <select id="appt-service" required>
+                  <select id="appt-service" name="appt-service" required>
                     <option value="">Selecione um serviço</option>
                     <option value="individual">Psicoterapia Individual</option>
                     <option value="casal">Terapia de Casal</option>
@@ -550,6 +553,7 @@
                 >
                 <textarea
                   id="appt-message"
+                  name="appt-message"
                   rows="4"
                   placeholder="Conte brevemente o que te trouxe até aqui. Isso nos ajuda a indicar o profissional mais adequado."
                 ></textarea>
