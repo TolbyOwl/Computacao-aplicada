@@ -325,7 +325,7 @@
   // validacao do form de agendamento
   const appointmentForm = document.getElementById("appointmentForm");
   const formFeedbackEl = document.getElementById("formFeedback");
-  let response;
+  let response_request;
 
   if (appointmentForm) {
     // travar preencher data
@@ -344,12 +344,17 @@
 
       try {
       const formData = new FormData(appointmentForm);
-      response = await fetch("", {
+      const response = await fetch("", {
         method: "POST",
         body: formData,
       });
-      console.log(await response.json());}
-      catch (error) {console.error(error);}
+      response_request = await response.json();
+      console.log(response_request);
+      }
+      catch (error) {console.error(error);
+      response_request.message = error.message || "Erro desconhecido";
+      response_request.status = "fail";
+      }
 
 
       setTimeout(() => {
@@ -357,7 +362,10 @@
         btn.innerHTML =
           '<i class="bi bi-calendar-plus"></i> Solicitar Agendamento';
 
-        if (response.status == "success") {
+        console.log(response_request.status);
+        console.log(response_request.message);
+
+        if (response_request.status === "success") {
           formFeedbackEl.className = "form-feedback success";
           formFeedbackEl.innerHTML =
             "✅ Solicitação enviada! Entraremos em contato em até 24 horas úteis para confirmar seu agendamento.";
@@ -375,11 +383,12 @@
             dateInput.setAttribute("min", today);
           }
         }
-        else if (response.status == "fail" && response.message.includes("Agendamento já existente")) {
+        else if (response_request.status === "fail" && response_request.message.includes("Agendamento já existente")) {
           formFeedbackEl.className = "form-feedback error";
-          formFeedbackEl.innerHTML = "⚠️ Parece que já existe um agendamento para este email e data. Por favor, verifique seus dados ou entre em contato conosco para gerenciar seus agendamentos.";
+          formFeedbackEl.innerHTML = "⚠️ Parece que já existe um agendamento para este email e data. Por favor, verifique seus dados ou inicie sessão para gerenciar seus agendamentos.";
           formFeedbackEl.scrollIntoView({
             behavior: "smooth",
+            block: "nearest",
           });
         }
         else {
@@ -387,6 +396,7 @@
           formFeedbackEl.innerHTML = "❌ Ocorreu um erro ao enviar sua solicitação. Por favor, tente novamente mais tarde ou entre em contato conosco.";
           formFeedbackEl.scrollIntoView({
             behavior: "smooth",
+            block: "nearest",
           });
         } 
 
