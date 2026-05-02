@@ -25,21 +25,22 @@
 
       <div class="form-box">
         <p class="form-title">FORMULÁRIO DE LOGIN</p>
+        <form method="post">
+          <input type="email" name="email" placeholder="Campo Email">
+          <input type="password" name="password" placeholder="Campo Senha">
 
-        <input type="email" placeholder="Campo Email">
-        <input type="password" placeholder="Campo Senha">
+          <!-- Linha checkbox -->
+          <div class="form-options">
+            <label>
+              <input type="checkbox"> Lembrar
+            </label>
+            <a href="/forgot_password">Esqueci a senha</a>
+          </div>
 
-        <!-- Linha checkbox -->
-        <div class="form-options">
-          <label>
-            <input type="checkbox"> Lembrar
-          </label>
-          <a href="recuperar.html">Esqueci a senha</a>
-        </div>
-
-        <button>Entrar</button>
+          <button type="submit">Entrar</button>
+        </form>
       </div>
-
+      <a href="/registrar" class="login-link">Ainda não tenho uma conta</a>
     </div>
 
   </div>

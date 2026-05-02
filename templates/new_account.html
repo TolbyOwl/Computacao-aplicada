@@ -21,16 +21,18 @@
 
       <div class="form-box">
         <p class="form-title">FORMULÁRIO DE CADASTRO</p>
+        <form method="post">
+          <input type="text" name="name" placeholder="Nome" required>
+          <input type="text" name="lastname" placeholder="Sobrenome" required>          
+          <input type="email" name="email" placeholder="Campo Email" required>
+          <input type="password" name="password" placeholder="Campo Senha" required>
+          <input type="password" name="confirm_password" placeholder="Confirmação de Senha" required>
 
-        <input type="text" placeholder="Campo Nome Completo">
-        <input type="email" placeholder="Campo Email">
-        <input type="password" placeholder="Campo Senha">
-        <input type="password" placeholder="Confirmação de Senha">
-
-        <button>Criar Conta</button>
+          <button type="submit">Criar Conta</button>
+        </form>
       </div>
 
-      <p class="login-link">Já tenho uma conta</p> <?-- Isso precisa de um link para a página de login --?>
+      <a href="{{ url_for('login') }}" class="login-link">Já tenho uma conta</a>
     </div>
 
   </div>

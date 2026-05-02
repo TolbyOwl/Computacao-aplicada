@@ -11,6 +11,7 @@ key=os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
 
 app = Flask(__name__)
+app.secret_key = "projectSEM012026Grupo#3"  # Change this to a secure key
 
 
 #Funções da página inicial
@@ -43,45 +44,36 @@ def home():
     if request.method == 'GET':
         return render_template('home.html')
 
-@app.route("/agendamento_inicial",methods=['POST'])
-def agendamento_inicial():
-    if request.method == 'POST':
-        print(request.form)
-
-#Execução
-if __name__ == '__main__':
-    app.run(debug=True)
-
-
-
-
 #Itens De/Pós login
 
 #Tem que ver se precisa desse redirecionamento ao clicar em login
-@app.route("/login")
-def home():
-    if "user" in session:
-        return redirect(url_for("dashboard"))
-    return redirect(url_for("login"))
 
 @app.route("/registrar", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
+        name = request.form["name"]
+        lastname = request.form["lastname"]
+        confirm_password = request.form["confirm_password"]
+
+        if password != confirm_password:
+            return render_template("new_account.html", error="As senhas não coincidem.")
 
         response = supabase.auth.sign_up(\
-            {"email": email, "password": password})
+            {"email": email, "password": password, "options": {"name": name, "lastname": lastname}})
 
         if response.user:
             return redirect(url_for("login"))
         else:
-            return render_template("register.html", \
-                                   error="Registration failed. Try again.")
-    return render_template("registrar.html")
+            return render_template("new_account.html", \
+                                   error="Falha ao criar conta. Tente novamente.")
+    return render_template("new_account.html")
 
 @app.route("/login", methods=['POST','GET'])
 def login():
+    if "user" in session:
+        return redirect(url_for("dash"))
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
@@ -90,10 +82,12 @@ def login():
 
         if response.user:
             session["user"] = response.user.email
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("dash"))
+            print(response) #Usar isso para descobrir quais informações vem no login
         else:
             return render_template("login.html", error="Falha ao iniciar sessão. O e-mail ou senha é inválido.")
-    return render_template("login.html")
+    if request.method == 'GET':
+        return render_template("login.html")
 
 @app.route("/dashboard")
 def dash():
@@ -106,6 +100,13 @@ def logout():
     session.pop("user", None)
     return redirect(url_for("login"))
 
-@app.route ("/psicologos",method=['POST','GET'])
+@app.route ("/psicologos",methods=['POST','GET'])
 def default():
     agenda.main()
+
+
+
+
+#Execução
+if __name__ == '__main__':
+    app.run(debug=True)
