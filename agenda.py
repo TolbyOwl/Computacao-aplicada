@@ -49,7 +49,6 @@ def main():
     with open("token.json", "w") as token:
       token.write(creds.to_json())
 
-
   try:
     service = build("calendar", "v3", credentials=creds)
 
