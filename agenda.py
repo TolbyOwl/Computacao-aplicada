@@ -26,31 +26,31 @@ from googleapiclient.errors import HttpError
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 
 
-def main():
+def main(access_token):
   """Shows basic usage of the Google Calendar API.
   Prints the start and name of the next 10 events on the user's calendar.
   """
-  creds = None
+  # creds = None
   # The file token.json stores the user's access and refresh tokens, and is
   # created automatically when the authorization flow completes for the first
   # time.
-  if os.path.exists("token.json"):
-    creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+  # if os.path.exists("token.json"):
+  #   creds = Credentials.from_authorized_user_file("token.json", SCOPES)
   # If there are no (valid) credentials available, let the user log in.
-  if not creds or not creds.valid:
-    if creds and creds.expired and creds.refresh_token:
-      creds.refresh(Request())
-    else:
-      flow = InstalledAppFlow.from_client_secrets_file(
-          "credentials.json", SCOPES
-      )
-      creds = flow.run_local_server(port=0)
+  # if not creds or not creds.valid:
+  #   if creds and creds.expired and creds.refresh_token:
+  #     creds.refresh(Request())
+  #   else:
+  #     flow = InstalledAppFlow.from_client_secrets_file(
+  #         "credentials.json", SCOPES
+  #     )
+  #     creds = flow.run_local_server(port=0)
     # Save the credentials for the next run
-    with open("token.json", "w") as token:
-      token.write(creds.to_json())
+    # with open("token.json", "w") as token:
+    #   token.write(creds.to_json())
 
   try:
-    service = build("calendar", "v3", credentials=creds)
+    service = build("calendar", "v3", credentials=access_token)
 
     # Call the Calendar API
     now = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
@@ -80,6 +80,19 @@ def main():
   except HttpError as error:
     print(f"An error occurred: {error}")
 
+
+def obtain_credentials(access_token):
+  if not access_token or not access_token.valid:
+    if access_token and access_token.expired and access_token.refresh_token:
+      access_token.refresh(Request())
+    else:
+      flow = InstalledAppFlow.from_client_secrets_file(
+          "credentials.json", SCOPES
+      )
+      access_token = flow.run_local_server(port=0)
+    # Save the credentials for the next run
+    google_access_token = access_token.to_json()
+  return google_access_token
 
 if __name__ == "__main__":
   main()

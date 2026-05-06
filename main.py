@@ -1,3 +1,6 @@
+import token
+
+from click import option
 from flask import Flask, render_template, request, redirect,  url_for, session, jsonify
 from supabase import create_client, Client
 from dotenv import load_dotenv
@@ -11,7 +14,7 @@ key=os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
 
 app = Flask(__name__)
-app.secret_key = "projectSEM012026Grupo#3"  # Change this to a secure key
+app.secret_key = os.getenv("secret_key")  # Change this to a secure key
 
 
 #Funções da página inicial
@@ -53,15 +56,15 @@ def register():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-        name = request.form["name"]
-        lastname = request.form["lastname"]
+        first_name = request.form["name"]
+        last_name = request.form["lastname"]
         confirm_password = request.form["confirm_password"]
 
         if password != confirm_password:
             return render_template("new_account.html", error="As senhas não coincidem.")
 
         response = supabase.auth.sign_up(\
-            {"email": email, "password": password, "options": {"name": name, "lastname": lastname}})
+            {"email": email, "password": password, "options": {"data": {"first_name": first_name, "last_name": last_name}}})
 
         if response.user:
             return redirect(url_for("login"))
@@ -73,6 +76,7 @@ def register():
 @app.route("/login", methods=['POST','GET'])
 def login():
     if "user" in session:
+        print(session["user_id"])
         return redirect(url_for("dash"))
     if request.method == "POST":
         email = request.form["email"]
@@ -82,6 +86,14 @@ def login():
 
         if response.user:
             session["user"] = response.user.email
+            try:
+                session["google_access_token"] = response.user.user_metadata.get("google_access_token")
+            except:
+                session["google_access_token"] = None
+            session["user_id"] = response.user.id
+            session["first_name"] = response.user.user_metadata.get("first_name")
+            print(session["user_id"])
+            # print(session.google_access_token)
             return redirect(url_for("dash"))
             print(response) #Usar isso para descobrir quais informações vem no login
         else:
@@ -98,13 +110,46 @@ def dash():
 @app.route("/logout")
 def logout():
     session.pop("user", None)
+    supabase.auth.sign_out()
     return redirect(url_for("login"))
 
-@app.route ("/psicologos",methods=['POST','GET'])
+@app.route ("/teste",methods=['POST','GET'])
 def default():
-    agenda.main()
+    if session["google_access_token"] is None:
+        authenticate_google()
+    return render_template("home(old).html", test=session["google_access_token"])
 
+#Funções da Agenda
 
+def get_credentials():
+    if "google_access_token" in session:
+        google_access_token = session["google_access_token"]
+        return google_access_token
+    else:
+        authenticate_google()
+
+def get_events(): 
+    try:
+        token = supabase.auth.get_user().raw_user_metadata.access_token
+        if token:
+            events = agenda.main(access_token=token)
+            return jsonify({"status": "success", "events": events})    
+    except:
+        authenticate_google()
+
+def authenticate_google():
+    try:
+        token = supabase.auth.admin.get_user_by_id(session["user_id"]).user_metadata.get("google_access_token")
+    except:
+        google_access_token = None
+        token = agenda.obtain_credentials(google_access_token)
+        print(token)
+        supabase.auth.admin.update_user_by_id(session["user_id"], attributes={"user_metadata": {"google_access_token": token}})
+    if token:
+        session["google_access_token"] = token   
+        return jsonify({"status": "success", "message": "Autenticação bem-sucedida com a conta Google."})
+    else: 
+        return jsonify({"status": "fail", "message": "Falha na autenticação com a conta Google."})
 
 
 #Execução
