@@ -101,11 +101,20 @@ def login():
     if request.method == 'GET':
         return render_template("login.html")
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=['POST', 'GET'])
 def dash():
     if "user" not in session:
         return redirect(url_for("login"))
-    return render_template("dashboard.html", user=session["user"])
+    # if request.method == 'POST' and request.json.get("request") == "fetch_events":
+    #     print(request.json)
+    #     dateStr = request.json.get("dateStr")
+    #     try:
+    #         events = get_events(dateStr)
+    #         return jsonify({"status": "success", "events": events})
+    #     except Exception:
+    #         print(f"Error fetching events: {Exception}")
+    #         return jsonify({"status": "fail", "message": "Erro ao buscar eventos."})
+    return render_template("dashboard.html", user=session["first_name"])
 
 @app.route("/logout")
 def logout():
@@ -115,9 +124,10 @@ def logout():
 
 @app.route ("/teste",methods=['POST','GET'])
 def default():
-    if session["google_access_token"] is None:
-        authenticate_google()
-    return render_template("home(old).html", test=session["google_access_token"])
+    # if session["google_access_token"] is None:
+    #     authenticate_google()
+    token = supabase.auth.admin.get_user_by_id(session["user_id"]).user.user_metadata.get("google_access_token")
+    return render_template("home(old).html", test=token)
 
 #Funções da Agenda
 
@@ -128,18 +138,22 @@ def get_credentials():
     else:
         authenticate_google()
 
-def get_events(): 
+@app.route("/get_events", methods=['POST'])
+def get_events():
+    dateStr = request.json.get("dateStr")
+    print(dateStr)
     try:
-        token = supabase.auth.get_user().raw_user_metadata.access_token
-        if token:
-            events = agenda.main(access_token=token)
-            return jsonify({"status": "success", "events": events})    
+        if "google_access_token" not in session:
+            session["google_access_token"] = supabase.auth.admin.get_user_by_id(session["user_id"]).user.user_metadata.get("google_access_token")
+        if "google_access_token" in session:
+            events = agenda.get_events(access_token=session["google_access_token"], dateStr=dateStr)
+            return events
     except:
-        authenticate_google()
+        return jsonify({"status": "fail", "message": "Víncule sua conta Google para acessar os eventos no calendário."})
 
 def authenticate_google():
     try:
-        token = supabase.auth.admin.get_user_by_id(session["user_id"]).user_metadata.get("google_access_token")
+        token = supabase.auth.admin.get_user_by_id(session["user_id"]).user.user_metadata.get("google_access_token")
     except:
         google_access_token = None
         token = agenda.obtain_credentials(google_access_token)

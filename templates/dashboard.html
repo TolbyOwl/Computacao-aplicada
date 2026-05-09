@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Dashboard</title>
   <link rel="stylesheet" href="static\dashboard.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -14,13 +16,12 @@
     <div class="logo">Logo</div>
 
     <div class="menu">
-      <div class="item active">Menu 1</div>
-      <div class="item">Menu 2</div>
-      <div class="item">Menu 3</div>
-      <div class="item">Menu 4</div>
+      <div class="item active"><a href="/dashboard"><i class="bi-house"></i></a></div>
+      <div class="item"><a href="/clients"><i class="bi-people"></i></a></div>
+      <div class="item"><a href="/notes"><i class="bi-sticky"></i></a></div>
     </div>
 
-    <div class="config">Config</div>
+    <div class="config"><a href="/settings"><i class="bi-gear-fill"></i></a></div>
   </aside>
 
   <!-- Conteúdo -->
@@ -28,7 +29,7 @@
 
     <!-- Linha superior -->
     <div class="top-row">
-      <div class="welcome">SAUDAÇÃO & DATA</div>
+      <div class="welcome">Olá, {{ user }}!</div>
       <div class="notifications">SOLICITAÇÕES PENDENTES</div>
     </div>
 
@@ -42,16 +43,56 @@
 
       <!-- Agenda -->
       <div class="agenda">
-        <h4>AGENDA DE HOJE</h4>
 
-        <div class="event online">ITEM: SESSÃO ONLINE</div>
+            <!-- Event Panel -->
+        <div class="event-panel" id="event-panel">
+          <div class="event-header">
+            <div class="event-date" id="event-date">Select a date</div>
+            <i class="fas fa-calendar-alt event-icon"></i>
+          </div>
+          <div class="event-list" id="event-list">
+            <div class="no-events">Select a date with events to view them here</div>
+          </div>
+        </div>
+        <!-- <h4>AGENDA DE HOJE</h4> -->
+
+        <!-- <div class="event online">ITEM: SESSÃO ONLINE</div>
         <div class="event done">ITEM: SESSÃO CONCLUÍDA</div>
-        <div class="event urgent">ITEM: URGÊNCIA</div>
+        <div class="event urgent">ITEM: URGÊNCIA</div> -->
       </div>
 
       <!-- Resumo -->
-      <div class="summary">
-        RESUMO DO DIA (CARDS)
+      <div class="calendar">
+          <div class="container">
+            <div class="calendar-container">
+              <div class="calendar-header">
+                <div class="nav-buttons">
+                  <button class="nav-btn" id="prev-month"><i class="fas fa-chevron-left"></i></button>
+                  <button class="nav-btn" id="next-month"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="month-year" id="month-year"></div>
+              </div>
+              
+              <div class="weekdays">
+                <div class="weekday">Dom</div>
+                <div class="weekday">Seg</div>
+                <div class="weekday">Ter</div>
+                <div class="weekday">Qua</div>
+                <div class="weekday">Qui</div>
+                <div class="weekday">Sex</div>
+                <div class="weekday">Sáb</div>
+              </div>
+              
+              <div class="days" id="days"></div>
+              
+              <div class="calendar-footer">
+                <button class="today-btn" id="today-btn"><i class="fas fa-calendar-day"></i> Hoje</button>
+                <div class="event-indicator">
+                  <i class="fas fa-circle" style="color: var(--accent); font-size: 0.6rem;"></i>
+                  <span>Possui evento</span>
+                </div>
+              </div>
+            </div>
       </div>
 
     </div>
@@ -59,6 +100,8 @@
   </main>
 
 </div>
+
+<script src="static/dashboard.js"></script>
 
 </body>
 </html>

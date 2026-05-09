@@ -16,6 +16,7 @@
 import datetime
 import os.path
 
+from flask import jsonify, json
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -26,7 +27,7 @@ from googleapiclient.errors import HttpError
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 
 
-def main(access_token):
+def get_events(access_token, dateStr):
   """Shows basic usage of the Google Calendar API.
   Prints the start and name of the next 10 events on the user's calendar.
   """
@@ -48,19 +49,33 @@ def main(access_token):
     # Save the credentials for the next run
     # with open("token.json", "w") as token:
     #   token.write(creds.to_json())
-
+  
   try:
-    service = build("calendar", "v3", credentials=access_token)
+    info = json.loads(access_token)
+    creds = Credentials(
+      token=info.get("access_token"),
+      refresh_token=info.get("refresh_token"),
+      token_uri=info.get("token_uri"),
+      client_id=info.get("client_id"),
+      client_secret=info.get("client_secret")
+    )
+    service = build("calendar", "v3",credentials=creds)
+
+    base_date = datetime.datetime.strptime(dateStr, "%Y-%m-%d")
+    tz = datetime.timezone(datetime.timedelta(hours=-3))
+    start_time = base_date.replace(tzinfo=tz)
+    end_time = start_time + datetime.timedelta(days=1)
 
     # Call the Calendar API
-    now = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
-    print("Getting the upcoming 10 events")
+    # now = datetime.datetime.now(tz=datetime.timezone.utc-3).isoformat()
+    # print("Getting the upcoming 10 events")
     events_result = (
         service.events()
         .list(
             calendarId="primary",
-            timeMin=now,
-            maxResults=10,
+            timeMin=start_time.isoformat(),
+            timeMax=end_time.isoformat(),
+            maxResults=30,
             singleEvents=True,
             orderBy="startTime",
         )
@@ -70,13 +85,13 @@ def main(access_token):
 
     if not events:
       print("No upcoming events found.")
-      return
+      return jsonify({"status": "success", "events": []})
+    
+    return jsonify({"status": "success", "events": events})
 
-    # Prints the start and name of the next 10 events
-    for event in events:
-      start = event["start"].get("dateTime", event["start"].get("date"))
-      print(start, event["summary"])
-
+    # for event in events:
+    #   start = event["start"].get("dateTime", event["start"].get("date"))
+    #   print(start, event["summary"])
   except HttpError as error:
     print(f"An error occurred: {error}")
 
@@ -94,8 +109,8 @@ def obtain_credentials(access_token):
     google_access_token = access_token.to_json()
   return google_access_token
 
-if __name__ == "__main__":
-  main()
+# if __name__ == "__main__":
+#   main()
 # [END calendar_quickstart]
 
 
