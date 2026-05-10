@@ -1,4 +1,4 @@
- :root {
+:root {
   --primary: #a9785a;
   --secondary: #8b5d40;
   --accent: #c46b6b;
@@ -9,12 +9,12 @@
   --selected: #a9785a;
   --event-panel-bg: #ffffff;
 }
- 
- * {
+
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -131,9 +131,9 @@ body {
 }
 
 .notifications {
-  border: 2px dashed #ccc;
-  padding: 15px;
   text-align: center;
+  position: relative;
+  cursor: default;
 }
 
 /* Próxima sessão */
@@ -242,13 +242,17 @@ body {
 }
 
 .calendar-header::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -50%;
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
   transform: rotate(30deg);
 }
 
@@ -294,7 +298,7 @@ body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   padding: 0.5rem 1rem;
-  background: rgba(169, 120, 90, 0.15);;
+  background: rgba(169, 120, 90, 0.15);
   font-weight: 600;
   color: var(--primary);
 }
@@ -344,9 +348,15 @@ body {
 }
 
 @keyframes pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .day.other-month {
@@ -355,7 +365,7 @@ body {
 }
 
 .day.has-events::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 5px;
   width: 5px;
@@ -413,7 +423,7 @@ body {
   align-items: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid rgba(169, 120, 90, 0.2);;
+  border-bottom: 2px solid rgba(169, 120, 90, 0.2);
 }
 
 .event-date {
@@ -483,20 +493,231 @@ body {
   margin-right: 10px;
 }
 
+/*Notificações*/
+.notification-dashboard {
+  --nd-primary: var(--primary);
+  --nd-secondary: var(--secondary);
+  --nd-text-dark: var(--dark);
+  --nd-text-light: var(--text);
+  --nd-highlight: var(--today);
+  --nd-success: #6bc48d;
+  --nd-danger: var(--accent);
+  --nd-bg-item: var(--light);
+
+  --nd-font: "Inter", "Segoe UI", Tahoma, sans-serif;
+  --nd-radius: 16px;
+  --nd-transition: 0.3s;
+
+  font-family: var(--nd-font);
+  box-sizing: border-box;
+  position: relative;
+  bottom: auto;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: var(--nd-radius);
+  box-shadow:
+    0 15px 35px rgba(169, 120, 90, 0.15),
+    0 5px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0d8d3;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9999;
+  max-height: 480px;
+  margin-top: 10px;
+  margin-top: 0;
+  min-height: 150px;
+}
+
+.notification-dashboard *,
+.notification-dashboard *::before,
+.notification-dashboard *::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+.notification-dashboard .dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: var(--nd-primary);
+  color: white;
+}
+
+.notification-dashboard .header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.notification-dashboard .notification-badge {
+  background-color: var(--nd-danger);
+  color: white;
+  border-radius: 50%;
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 6px;
+}
+
+/* Lista de Notificações */
+.notification-dashboard .notification-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #ffffff;
+}
+
+/* Scrollbar */
+.notification-dashboard .notification-list::-webkit-scrollbar {
+  width: 6px;
+}
+.notification-dashboard .notification-list::-webkit-scrollbar-thumb {
+  background: var(--nd-highlight);
+  border-radius: 10px;
+}
+
+/* Itens */
+.notification-dashboard .notification-item {
+  padding: 12px;
+  border-radius: 10px;
+  background-color: var(--nd-bg-item);
+  border-left: 4px solid var(--nd-highlight);
+  transition: all var(--nd-transition) ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.notification-dashboard .notification-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.notification-dashboard .notification-item.active {
+  border-left-color: var(--nd-primary);
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(169, 120, 90, 0.1);
+}
+
+.notification-dashboard .notification-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar*/
+.notification-dashboard .notification-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--nd-secondary);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+/* Textos*/
+.notification-dashboard .notification-content {
+  flex-grow: 1;
+}
+
+.notification-dashboard .notification-text {
+  font-size: 0.9rem;
+  color: var(--nd-text-dark);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.notification-dashboard .notification-time {
+  font-size: 0.75rem;
+  color: var(--nd-text-light);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Botões*/
+.notification-dashboard .item-actions {
+  max-height: 0;
+  opacity: 0;
+  display: flex;
+  gap: 8px;
+  transition: all 0.3s ease;
+  margin-top: 0;
+  pointer-events: none;
+}
+
+.notification-dashboard .notification-item.active .item-actions {
+  max-height: 40px;
+  opacity: 1;
+  margin-top: 12px;
+  pointer-events: auto;
+}
+
+.notification-dashboard .action-btn {
+  flex-grow: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background var(--nd-transition) ease;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.notification-dashboard .btn-accept {
+  background-color: var(--nd-success);
+}
+.notification-dashboard .btn-accept:hover {
+  background-color: #55a875;
+}
+
+.notification-dashboard .btn-reject {
+  background-color: var(--nd-danger);
+}
+.notification-dashboard .btn-reject:hover {
+  background-color: #a95a5a;
+}
+
 @media (max-width: 767px) {
   .container {
     gap: 15px;
   }
 
-  .calendar-container, .event-panel{
+  .calendar-container,
+  .event-panel {
     width: 100%;
     margin: 0 auto;
   }
-  
+
   .event-panel {
     max-width: 400px;
   }
-  
+
   .event-date {
     font-size: 1.3rem;
   }

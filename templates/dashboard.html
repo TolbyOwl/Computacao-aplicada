@@ -6,6 +6,11 @@
   <link rel="stylesheet" href="static\dashboard.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Implementação das notificações de novos usuários-->>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
 </head>
 <body>
 
@@ -30,7 +35,37 @@
     <!-- Linha superior -->
     <div class="top-row">
       <div class="welcome">Olá, {{ user }}!</div>
-      <div class="notifications">SOLICITAÇÕES PENDENTES</div>
+
+      <div class="notifications">
+        <div class="notification-dashboard">
+    <div class="dashboard-header">
+      <div class="header-title">
+        Solicitações Pendentes
+      </div>
+    </div>
+
+    <div class="notification-list">
+
+  <div class="notification-item">
+    <div class="notification-main">
+      <div class="notification-avatar">JM</div> <!--Variavel avatar-->
+      <div class="notification-content">
+        <p class="notification-text">Jailson Mendes</p> <!--Variavel nome-->
+        <span class="notification-time"><i class="ri-calendar-line"></i> 15/05 às 14:30</span> <!--Variavel data e hora-->
+      </div>
+    </div>
+    
+    <!-- Botões que vão aparecer ao clicar -->
+    <div class="item-actions">
+      <button class="action-btn btn-accept"><i class="ri-check-line"></i> Aceitar</button>
+      <button class="action-btn btn-reject"><i class="ri-close-line"></i> Recusar</button>
+    </div>
+  </div>
+</div>
+
+
+  </div>
+    </div>
     </div>
 
     <!-- Próxima sessão -->
