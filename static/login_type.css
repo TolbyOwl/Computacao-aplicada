@@ -1,3 +1,36 @@
+:root {
+  --primary: #8b5e4c;
+  --primary-hover: #724c3d;
+  --primary-light: rgba(139, 94, 76, 0.1);
+  --primary-glow: rgba(139, 94, 76, 0.25);
+  --accent: #c49a6c;
+  --accent-light: #f5ede3;
+
+  --bg: #fefcf9;
+  --bg-alt: #f9f4ef;
+  --bg-dark: #2d2621;
+
+  --text-main: #2d2621;
+  --text-muted: #7a716a;
+  --text-on-dark: #f5ede3;
+
+  --border: #ebe5e0;
+  --white: #ffffff;
+
+  --shadow-sm: 0 2px 8px rgba(139, 94, 76, 0.08);
+  --shadow-md: 0 8px 24px rgba(139, 94, 76, 0.12);
+  --shadow-lg: 0 20px 50px rgba(139, 94, 76, 0.18);
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-xl: 40px;
+
+  --transition: all 0.3s ease;
+  --font-body: "Outfit", sans-serif;
+  --font-serif: "Lora", serif;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -54,8 +87,8 @@ body {
 
 /* Caixa do formulário */
 .form-box {
-  border: 2px dashed #ccc;
-  border-radius: 15px;
+  border: 2px solid #ccc;
+  /* border-radius: 15px; */
   padding: 20px;
 }
 
@@ -139,4 +172,24 @@ body {
 
 .form-options input {
   margin-right: 5px;
+}
+
+select {
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  color: var(--text-main);
+  background: var(--bg);
+  transition: var(--transition);
+  outline: none;
+}
+
+message {
+  margin-top: 15px;
+  font-size: 10px;
+  color: red;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

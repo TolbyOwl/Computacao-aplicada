@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Criar Conta</title>
+  <link rel="stylesheet" href="static\login_type.css">
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Lado esquerdo -->
+    <div class="left">
+      <p>ESPAÇO PARA IMAGEM<br>EXCLUSIVA CADASTRO</p>
+    </div>
+
+    <!-- Lado direito -->
+    <div class="right">
+      <h2>Finalize o registro para prosseguir</h2>
+
+      <div class="form-box">
+        <p class="form-title">Só mais alguns dados para finalizarmos</p>
+        <form method="post">
+          <input type="text" name="ddd" placeholder="DDD" required>
+          <input type="text" name="telefone" placeholder="Telefone" required>          
+          <select name="tipo" required>
+                    <option value="Cliente">Cliente</option>
+                    <option value="Psicologo">Psicólogo(a)</option>
+          </select>
+
+          <input name="crp" placeholder="CRP">
+          <input type="password" name="code" placeholder="Código para psicólogos">
+
+          <button type="submit">Finalizar registro</button>
+        </form>
+      </div>
+      <br>
+      <p class="message">{{ message }}</p>
+    </div>
+  </div>
+
+</body>
+</html>

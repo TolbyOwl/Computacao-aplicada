@@ -244,10 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
     showEvents(dateStr);
   });
 
-  // Initialize calendar
-  renderCalendar();
-  const todayStr = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
-  showEvents(todayStr);
+
 
   // notifications
   notificationList.onclick = function (event) {
@@ -271,4 +268,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     item.classList.toggle("active");
   };
+
+
+    // Initialize calendar 
+  
+  renderCalendar();
+  const todayStr = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
+  showEvents(todayStr);
 });

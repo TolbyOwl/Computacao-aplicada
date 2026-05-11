@@ -131,7 +131,7 @@ body {
 }
 
 .notifications {
-  text-align: center;
+  /* text-align: center; */
   position: relative;
   cursor: default;
 }
@@ -505,7 +505,7 @@ body {
   --nd-bg-item: var(--light);
 
   --nd-font: "Inter", "Segoe UI", Tahoma, sans-serif;
-  --nd-radius: 16px;
+  --nd-radius: 0;
   --nd-transition: 0.3s;
 
   font-family: var(--nd-font);
