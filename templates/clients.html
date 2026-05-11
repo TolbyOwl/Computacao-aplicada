@@ -1,89 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="static\clients.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="static\clients.css" />
+  </head>
+  <body>
+    <div class="dashboard">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo">LOGO & TÍTULO</div>
 
-<div class="dashboard">
-
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="logo">LOGO & TÍTULO</div>
-
-    <div class="profile">
-      <p>Perfil do Psicólogo</p>
-    </div>
-
-    <nav>
-      <a href="#">Menu 1</a>
-      <a href="#" class="active">Pacientes</a>
-      <a href="#">Menu 3</a>
-      <a href="#">Menu 4</a>
-      <a href="#">Menu 5</a>
-    </nav>
-
-    <button class="btn secondary">Google Calendar</button>
-    <button class="btn primary">Nova Sessão</button>
-  </aside>
-
-  <!-- Conteúdo -->
-  <main class="main">
-
-    <!-- Topo -->
-    <div class="top">
-      <div class="title">Meus Pacientes</div>
-      <div class="actions">
-        <input type="text" placeholder="Buscar...">
-        <button class="btn dark">Novo</button>
-      </div>
-    </div>
-
-    <!-- Filtros -->
-    <div class="filters">
-      <button class="active">Todos</button>
-      <button>Ativos</button>
-      <button>Pausa</button>
-      <button>Alta</button>
-    </div>
-
-    <!-- Cards -->
-    <div class="cards">
-
-      <!-- Card -->
-      <div class="card">
-        <div class="avatar"></div>
-        <h3>Nome do Paciente</h3>
-        <span class="status">Status online</span>
-
-        <div class="sessions">
-          <div>Última Sessão</div>
-          <div>Próxima Sessão</div>
+        <div class="profile">
+          <p>Perfil do Psicólogo</p>
         </div>
 
-        <div class="card-footer">
-          <div class="icons">💬 📄</div>
-          <a href="#">Ver Perfil →</a>
+        <nav>
+          <a href="#">Menu 1</a>
+          <a href="#" class="active">Pacientes</a>
+          <a href="#">Menu 3</a>
+          <a href="#">Menu 4</a>
+          <a href="#">Menu 5</a>
+        </nav>
+
+        <button class="btn secondary">Google Calendar</button>
+        <button class="btn primary">Nova Sessão</button>
+      </aside>
+
+      <main class="main">
+        <div class="top">
+          <div class="title">Meus Pacientes</div>
+          <div class="actions">
+            <div class="search-box">
+              <i class="ri-search-line"></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Buscar paciente..."
+              />
+            </div>
+            <button class="btn primary">
+              <i class="ri-user-add-line"></i> Novo
+            </button>
+          </div>
         </div>
-      </div>
 
-      <!-- Repete -->
-      <div class="card"></div>
-      <div class="card"></div>
+        <!-- Filtros -->
+        <div class="filters" id="filterButtons">
+          <button class="active" data-filter="todos">Todos</button>
+          <button data-filter="ativo">Ativos</button>
+          <button data-filter="pausa">Em Pausa</button>
+          <button data-filter="alta">Alta</button>
+        </div>
 
-      <!-- Card adicionar -->
-      <div class="card add">
-        <span>+</span>
-        <p>Adicionar Novo</p>
-      </div>
+        <!-- Cards -->
+        <div class="cards" id="cardsContainer">
+          <!-- Exemplo-->
+          <div class="card patient-card" data-status="ativo">
+            <div class="card-header">
+              <!-- Avatar -->
+              <div class="avatar">JM</div>
+              <div class="patient-info">
+                <h3 class="patient-name">Jailson</h3>
+                <span class="status ativo">Ativo</span>
+              </div>
+            </div>
 
+            <div class="sessions">
+              <div class="session-info">
+                <span>Última Sessão</span><span>08/05/2026</span>
+              </div>
+              <div class="session-info">
+                <span>Próxima Sessão</span><span>15/05/2026</span>
+              </div>
+            </div>
+          </div>
+          <!--
+            <div class="card-footer">
+              <div class="icons">
+                <i class="ri-message-3-line" title="Mensagem"></i>
+                <i class="ri-delete-bin-line action-icon" title="Arquivar"></i>
+              </div>
+              <a href="#">Ver Perfil <i class="ri-arrow-right-line"></i></a>
+            </div>
+          </div>
+
+          {% for pacient in pacient_pending %}
+          <div class="pacient-item">
+            <div class="pacient-main">
+              <div class="pacient-avatar">V</div>
+              <div class="pacient-info"> 
+                <h3 class="patient-name">{{ pacient.nome }}</h3>
+                <span class="status ativo">{{ pacient.status }}</span>
+              </div>
+
+              <div class="pacient-sessions">
+                <div class="session-info">
+                  <span>Última Sessão</span><span>08/05/2026</span>
+                </div>
+                <div class="pacient-info">
+                  <span>Próxima Sessão</span><span>15/05/2026</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          -->
+          <!-- Card Adicionar Novo -->
+          <div class="card add" id="addCard">
+            <i class="ri-add-circle-line"></i>
+            <p>Adicionar Novo</p>
+          </div>
+        </div>
+      </main>
     </div>
-
-  </main>
-
-</div>
-
-</body>
+  </body>
 </html>
