@@ -61,6 +61,7 @@ def register():
         first_name = request.form["name"]
         last_name = request.form["lastname"]
         confirm_password = request.form["confirm_password"]
+        crp = request.form['crp']
 
         if password != confirm_password:
             return render_template("new_account.html", error="As senhas não coincidem.")
@@ -69,6 +70,7 @@ def register():
             {"email": email, "password": password, "options": {"data": {"first_name": first_name, "last_name": last_name}}})
 
         if response.user:
+            supabase.table("Psicologo").insert({'nome': first_name, 'sobrenome' : last_name,'user_uuid' : response.user.id, 'crp' : crp}).execute()
             return redirect(url_for("login"))
         else:
             return render_template("new_account.html", \
@@ -98,7 +100,6 @@ def login():
             print(session["user_id"])
             # print(session.google_access_token)
             return redirect(url_for("dash"))
-            print(response) #Usar isso para descobrir quais informações vem no login
         else:
             return render_template("login.html", error="Falha ao iniciar sessão. O e-mail ou senha é inválido.")
     if request.method == 'GET':
@@ -108,50 +109,14 @@ def login():
 def dash():
     if "user" not in session:
         return redirect(url_for("login"))
-    # if request.method == 'POST' and request.json.get("request") == "fetch_events":
-    #     print(request.json)
-    #     dateStr = request.json.get("dateStr")
-    #     try:
-    #         events = get_events(dateStr)
-    #         return jsonify({"status": "success", "events": events})
-    #     except Exception:
-    #         print(f"Error fetching events: {Exception}")
-    #         return jsonify({"status": "fail", "message": "Erro ao buscar eventos."})
-    user_type = check_first_login()
-    if user_type == "psicologo":
-        #definir prioridade com uma variavel
-        # psicologo_type = supabase.table('Psicologo').select('tipo_consulta').eq('user_uuid',session["user_id"]).execute()
-        notifications_pending = supabase.table('Notificacao').select('*').eq('status', "Pendente").order('created_at', desc=True).execute()
-        print(notifications_pending.data)
-        return render_template("dashboard.html", user=session["first_name"], notifications_pending = notifications_pending.data)
-    if user_type == "cliente":
-        return render_template("cliente.html", user=session["first_name"])
-    else:
-        return redirect(url_for("first_login"))
+     #definir prioridade com uma variavel
+    # psicologo_type = supabase.table('Psicologo').select('tipo_consulta').eq('user_uuid',session["user_id"]).execute()
+    notifications_pending = supabase.table('Notificacao').select('*').eq('status', "Pendente").order('created_at', desc=True).execute()
+    return render_template("dashboard.html", user=session["first_name"], notifications_pending = notifications_pending.data)
 
-@app.route("/first_login", methods=['POST', 'GET'])
-def first_login():
-    if request.method == 'GET':
-        return render_template("first_login.html")
-    if request.method == 'POST':
-        ddd = request.form['ddd']
-        telefone = request.form['telefone']
-        tipo = request.form['tipo']
-        nome = session["first_name"]
-        sobrenome = session["last_name"]
-        print(request.form)
-        if tipo == "Cliente":
-            supabase.table("Cliente").insert({'nome': nome, 'sobrenome' : sobrenome,'user_uuid' : session["user_id"]}).execute()
-            return redirect(url_for("dash"))
-        if tipo == "Psicologo":
-            crp = request.form['crp']
-            code = request.form['code']
-            if code != "1234":
-                return render_template("first_login.html", user=session["first_name"], message="Código de psicólogo inválido. Tente novamente.")
-            supabase.table("Psicologo").insert({'nome': nome, 'sobrenome' : sobrenome,'user_uuid' : session["user_id"], 'crp' : crp}).execute()
-            return redirect(url_for("dash"))
-        else: 
-            return render_template ("first_login.html", message ="Identifique se sua conta é de cliente ou psicólogo para acessar os recursos do site.")
+@app.route("/clients", methods=['POST', 'GET'])
+def clients():
+    return render_template("clients.html")
 
 @app.route("/autenticar_agenda")
 def authenticate_google():
@@ -182,16 +147,6 @@ def default():
     return render_template("home(old).html", test=token)
 
 #Funções adicionais
-
-def check_first_login():
-    id = session["user_id"]
-    isclient = supabase.table('Cliente').select('user_uuid').eq('user_uuid',id).execute()
-    if not isclient.data:
-        ispsicologo = supabase.table('Psicologo').select('user_uuid').eq('user_uuid',id).execute()
-        if not ispsicologo.data:
-            return "first_login"
-        return "psicologo"
-    return "cliente"
 
 #Funções da Agenda
 
