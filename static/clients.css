@@ -35,87 +35,78 @@ body {
   min-height: 100vh;
 }
 
+/* Sidebar */
 .sidebar {
-  background-color: var(--white);
-  padding: 24px;
+  width: 90px;
+  background: #fff;
+  padding: 15px 10px;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #e0d8d3;
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  justify-content: space-between;
+  align-items: center;
 }
 
+/* Logo */
 .logo {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--primary);
-  margin-bottom: 40px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 40px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--light);
-}
-
-.profile-img {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background-color: var(--primary);
-  color: var(--white);
+  background: #ddd;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  font-weight: bold;
+  font-size: 11px;
 }
 
-.profile-info p {
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-.profile-info span {
-  font-size: 0.8rem;
-  color: var(--text);
-}
-
-nav {
+/* Menu */
+.menu {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  flex-grow: 1;
+  gap: 15px;
 }
 
-nav a {
-  text-decoration: none;
-  color: var(--text);
-  padding: 12px 16px;
-  border-radius: var(--radius-md);
-  font-weight: 500;
+.item {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  transition: var(--transition);
+  justify-content: center;
+  font-size: 10px;
+  text-align: center;
 }
 
-nav a:hover,
-nav a.active {
-  background-color: var(--light);
-  color: var(--primary);
-  font-weight: 600;
+.item i {
+  font-size: 1.4rem;
+  color: #000000;
 }
 
-.sidebar-btns {
+.item.active {
+  border-color: #a9785a;
+  color: #a9785a;
+  background-color: beige;
+}
+
+.item.active i {
+  font-size: 1.5rem;
+  color: #a9785a;
+}
+
+/* Config */
+.config {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.config i {
+  font-size: 1.4rem;
+  color: #000000;
 }
 
 .btn {
@@ -381,4 +372,60 @@ nav a.active {
   font-weight: bold;
   font-size: 1.2rem;
   flex-shrink: 0;
+}
+
+/* itens do forms popup*/
+
+ .popup-form {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.form-content {
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.input-group input, .input-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.input-group textarea {
+  height: 100px;
+  resize: vertical;
 }
