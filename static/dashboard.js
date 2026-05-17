@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const eventItem = document.createElement("div");
         eventItem.className = "event-item";
         eventItem.innerHTML = `
-          <a href="/event/open/${event.id}" target="_blank" class="event-link">
+          <a href="/event_open/${event.id}" target="_blank" class="event-link">
             <div class="event-color"></div>
             <div class="event-time">${eventTime}</div>
             <div class="event-text">${event.summary}</div>

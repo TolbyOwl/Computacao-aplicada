@@ -17,8 +17,8 @@
       <div class="logo">Logo</div>
 
       <div class="menu">
-        <div class="item active"><a href="/dashboard"><i class="bi-house"></i></a></div>
-        <div class="item"><a href="/clients"><i class="bi-people"></i></a></div>
+        <div class="item"><a href="/dashboard"><i class="bi-house"></i></a></div>
+        <div class="item active"><a href="/clients"><i class="bi-people"></i></a></div>
         <div class="item"><a href="/notes"><i class="bi-sticky"></i></a></div>
       </div>
 
@@ -56,13 +56,13 @@
         <!-- Cards -->
         <div class="cards" id="cardsContainer">
           {% for pacient in pacients %}
-          <div class="card patient-card" data-status="ativo" id="openPacientBtn">
+          <div class="card patient-card open-pacient-btn" data-status="{{ pacient.Status }}" data-event-id="{{ pacient.id }}">
             <div class="card-header">
               <!-- Avatar -->
               <div class="avatar">JM</div>
               <div class="patient-info">
-                <h3 class="patient-name">Jailson</h3>
-                <span class="status ativo">Ativo</span>
+                <h3 class="patient-name">{{ pacient.Nome }} {{pacient.Sobrenome}}</h3>
+                <span class="status {{pacient.Status}}">{{pacient.Status}}</span>
               </div>
             </div>
 
@@ -122,62 +122,47 @@
         <div class="form-content">
             <span class="close-btn" id="closePopupBtn">&times;</span>
             <h2>Novo paciente</h2>
-            <form id="popupContactForm">
+            <form id="popupContactForm" method="post">
                 <div class="input-group">
                     <label for="name">Nome</label>
-                    <input type="text" id="name" required>
+                    <input type="text" id="name" name="name" required>
                 </div>
                 <div class="input-group">
-                    <label for="name">Sobrenome</label>
-                    <input type="text" id="last_name" required>
+                    <label for="last_name">Sobrenome</label>
+                    <input type="text" id="last_name" name="last_name" required>
                 </div>
                 <div class="input-group">
                     <label for="ddd">DDD</label>
-                    <input id="telefone_ddd" placeholder="Ex: 11" required>
+                    <input id="telefone_ddd" name="telefone_ddd" placeholder="Ex: 11" required>
                 </div>
                 <div class="input-group">
                     <label for="telefone">Telefone</label>
-                    <input id="telefone_ddd" placeholder="Ex: 1111-2222" required>
+                    <input id="telefone" name="telefone" placeholder="Ex: 1111-2222" required>
                 </div>
                 <div class="input-group">
                     <label for="ddd">DDD adicional</label>
-                    <input id="telefone_ddd" placeholder="Ex: 11" required>
+                    <input id="telefone_ddd_adicional" name="telefone_ddd_adicional" placeholder="Ex: 11" required>
                 </div>
                 <div class="input-group">
                     <label for="telefone">Telefone adicional</label>
-                    <input id="telefone_ddd" placeholder="Ex: 1111-2222" required>
+                    <input id="telefone_adicional" name="telefone_adicional" placeholder="Ex: 1111-2222" required>
+                </div>
+                <div class="input-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                      <option value="ativo">ativo</option>
+                      <option value="em pausa">em pausa</option>
+                      <option value="alta">alta</option>
+                    </select>
                 </div>
                 <div class="input-group">
                     <label for="message">Informações adicionais</label>
-                    <textarea id="additional_info"></textarea>
+                    <textarea id="additional-info" name="additional-info"></textarea>
                 </div>
                 <button type="submit" class="btn">Adicionar</button>
             </form>
         </div>
       </div>
-
-      <!--Página do cliente-->
-      <div id="popupPacient" class="popup-form">
-        <div class="form-content">
-            <span class="close-btn" id="closePacientBtn">&times;</span>
-            <h2>Informações do cliente</h2>
-            <form id="popupContactForm">
-                <div class="input-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" placeholder="Enter your name" required>
-                </div>
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" placeholder="Enter your email" required>
-                </div>
-                <div class="input-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" placeholder="Enter your message" required></textarea>
-                </div>
-                <button type="submit" class="btn">Adicionar</button>
-            </form>
-        </div>
-      </div>      
 
     <script src="static/clients.js"></script>
 

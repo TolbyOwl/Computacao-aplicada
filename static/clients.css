@@ -9,6 +9,8 @@
   --bg-color: #e9e5e2;
   --white: #ffffff;
 
+  --transition: all 0.3s ease;
+
   --radius-lg: 16px;
   --radius-md: 10px;
   --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -31,7 +33,7 @@ body {
 /* Layout Principal: Grid dividindo Sidebar e Main */
 .dashboard {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 100px 1fr;
   min-height: 100vh;
 }
 
@@ -388,6 +390,18 @@ body {
   align-items: center;
 }
 
+ .popup-form-edit {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
 .form-content {
   background-color: white;
   padding: 40px;
@@ -417,7 +431,7 @@ body {
   font-size: 14px;
 }
 
-.input-group input, .input-group textarea {
+.input-group input, .input-group textarea, .input-group select {
   width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
@@ -429,3 +443,4 @@ body {
   height: 100px;
   resize: vertical;
 }
+

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Paciente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='clients.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+
+      <!--Página do cliente-->
+      <div id="popupPacient" class="popup-form-edit">
+        <div class="form-content">
+            <a href="/clients"><span class="close-btn" id="closePacientBtn">&times;</span></a>
+            <h2>Ficha do cliente</h2>
+            <form id="popupContactForm" method="post">
+                <div class="input-group">
+                    <label for="name">Nome</label>
+                    <input type="text" id="name" name="name" value="{{ pacient.Nome }}" required>
+                </div>
+                <div class="input-group">
+                    <label for="last_name">Sobrenome</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ pacient.Sobrenome }}" required>
+                </div>
+                <div class="input-group">
+                    <label for="ddd">DDD</label>
+                    <input id="telefone_ddd" name="telefone_ddd" placeholder="Ex: 11" value="{{ pacient.telefone_ddd }}" required>
+                </div>
+                <div class="input-group">
+                    <label for="telefone">Telefone</label>
+                    <input id="telefone" name="telefone" placeholder="Ex: 1111-2222" value="{{ pacient.telefone }}" required>
+                </div>
+                <div class="input-group">
+                    <label for="ddd">DDD adicional</label>
+                    <input id="telefone_ddd_adicional" name="telefone_ddd_adicional" placeholder="Ex: 11" value="{{ pacient.telefone_ddd_adicional }}" required>
+                </div>
+                <div class="input-group">
+                    <label for="telefone">Telefone adicional</label>
+                    <input id="telefone_adicional" name="telefone_adicional" placeholder="Ex: 1111-2222" value="{{ pacient.telefone_adicional }}" required>
+                </div>
+                <div class="input-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="ativo" {% if pacient.Status == "ativo" %}selected{% endif %}>ativo</option>
+                        <option value="em pausa" {% if pacient.Status == "em pausa" %}selected{% endif %}>em pausa</option>
+                        <option value="alta" {% if pacient.Status == "alta" %}selected{% endif %}>alta</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="message">Informações adicionais</label>
+                    <textarea id="additional-info" name="additional-info">{{ pacient.info or "" }}</textarea>
+                </div>
+                <button type="submit" class="btn">Atualizar</button>
+            </form>
+        </div>
+      </div>      
+  </body>
+</html>
