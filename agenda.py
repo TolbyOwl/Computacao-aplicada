@@ -27,7 +27,7 @@ from googleapiclient.errors import HttpError
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 
 
-def get_events(access_token, dateStr):
+def get_events(access_token, dateStr): #Todos os eventos da data
   """Shows basic usage of the Google Calendar API.
   Prints the start and name of the next 10 events on the user's calendar.
   """
@@ -95,6 +95,37 @@ def get_events(access_token, dateStr):
   except HttpError as error:
     print(f"An error occurred: {error}")
 
+def get_specific_event(access_token, event_id): #Apenas um eventos
+  
+  try:
+    info = json.loads(access_token)
+    creds = Credentials(
+      token=info.get("access_token"),
+      refresh_token=info.get("refresh_token"),
+      token_uri=info.get("token_uri"),
+      client_id=info.get("client_id"),
+      client_secret=info.get("client_secret")
+    )
+    service = build("calendar", "v3",credentials=creds)
+
+    # base_date = datetime.datetime.strptime(dateStr, "%Y-%m-%d")
+    # tz = datetime.timezone(datetime.timedelta(hours=-3))
+    # start_time = base_date.replace(tzinfo=tz)
+    # end_time = start_time + datetime.timedelta(days=1)
+    event_result = (
+        service.events()
+        .get(
+            calendarId="primary",
+            eventId=event_id
+        )
+        .execute()
+    )
+    event = event_result
+    
+    return event
+  
+  except HttpError as error:
+    print(f"An error occurred: {error}")
 
 def obtain_credentials(access_token):
   if not access_token or not access_token.valid:

@@ -210,12 +210,19 @@ def get_events():
     except:
         return jsonify({"status": "fail", "message": "Víncule sua conta Google para acessar os eventos no calendário."})
 
-@app.route("/event/<event_id>", methods=['POST','GET'])
+@app.route("/event/<string:event_id>", methods=['POST','GET'])
 def edit_event(event_id): 
     if request.method=="POST":
         pass
-    if request.method=="GET":    
-        pass
+    if request.method=="GET":
+        try:
+            if "google_access_token" not in session:
+                session["google_access_token"] = supabase.auth.admin.get_user_by_id(session["user_id"]).user.user_metadata.get("google_access_token")
+            if "google_access_token" in session:  
+                event_details = agenda.get_specific_event(access_token=session["google_access_token"], event_id=event_id)
+                return render_template("event_data.html", event=event_details)
+        except:
+            return jsonify({"status": "fail", "message": "Víncule sua conta Google para acessar os eventos no calendário."})
 
 
 

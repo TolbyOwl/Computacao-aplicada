@@ -573,7 +573,8 @@ body {
 
 /* Lista de Notificações */
 .notification-dashboard .notification-list {
-  flex-grow: 1;
+  /* flex-grow: 1; */
+  max-height: 120px;
   overflow-y: auto;
   padding: 15px;
   display: flex;
@@ -593,6 +594,7 @@ body {
 
 /* Itens */
 .notification-dashboard .notification-item {
+  flex-shrink: 0;
   padding: 12px;
   border-radius: 10px;
   background-color: var(--nd-bg-item);

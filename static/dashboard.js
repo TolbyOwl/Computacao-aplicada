@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const todayBtn = document.getElementById("today-btn");
   const eventPanel = document.getElementById("event-panel");
   const eventDateEl = document.getElementById("event-date");
+  const newEventBtn = document.getElementById("new-event-btn");
   const eventListEl = document.getElementById("event-list");
   const notificationList = document.querySelector(".notification-list");
 
@@ -179,6 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const dayName = dayNames[dateObj.getDay()];
 
     eventDateEl.textContent = `${dayName}, ${day} de ${months[dateObj.getMonth()]} de ${year}`;
+    newEventBtn.href = `/new-consult/${dateStr}`;
 
     // Clear previous events
     eventListEl.innerHTML = "";
@@ -202,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const eventItem = document.createElement("div");
         eventItem.className = "event-item";
         eventItem.innerHTML = `
-          <a href="/event_open/${event.id}" target="_blank" class="event-link">
+          <a href="/event/${event.id}" class="event-link">
             <div class="event-color"></div>
             <div class="event-time">${eventTime}</div>
             <div class="event-text">${event.summary}</div>
@@ -220,18 +222,18 @@ document.addEventListener("DOMContentLoaded", function () {
   prevMonthBtn.addEventListener("click", () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     renderCalendar();
-    eventDateEl.textContent = "Select a date";
+    eventDateEl.textContent = "Selecione uma data";
     eventListEl.innerHTML =
-      '<div class="no-events">Select a date with events to view them here</div>';
+      '<div class="no-events">Selecione uma data para visualizar os eventos</div>';
   });
 
   // Next month
   nextMonthBtn.addEventListener("click", () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
     renderCalendar();
-    eventDateEl.textContent = "Select a date";
+    eventDateEl.textContent = "Selecione uma data";
     eventListEl.innerHTML =
-      '<div class="no-events">Select a date with events to view them here</div>';
+      '<div class="no-events">Selecione uma data para visualizar os eventos</div>';
   });
 
   // Today button
