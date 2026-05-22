@@ -48,7 +48,7 @@
   <div class="notification-list">
 
     {% for notification in notifications_pending %}
-    <div class="notification-item">
+    <div class="notification-item" id="{{ notification.id }}">
       <div class="notification-main">
         <div class="notification-avatar">JM</div> <!--Variavel avatar-->
         <div class="notification-content">
@@ -59,8 +59,8 @@
       
       <!-- Botões que vão aparecer ao clicar -->
       <div class="item-actions">
-        <button class="action-btn btn-accept" id="{{ notification.id }}"><i class="ri-check-line"></i> Aceitar</button>
-        <button class="action-btn btn-reject" id="{{ notification.id }}"><i class="ri-close-line"></i> Recusar</button>
+        <button class="action-btn btn-accept"><i class="ri-check-line"></i> Aceitar</button>
+        <button class="action-btn btn-reject"><i class="ri-close-line"></i> Recusar</button>
       </div>
     </div>
    {% else %}

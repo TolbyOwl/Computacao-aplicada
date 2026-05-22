@@ -27,6 +27,7 @@ def home():
         sobrenome_cliente = request.form.get('appt-lastname')
         telefone_ddd = request.form.get('appt-ddd')
         telefone = request.form.get('appt-phone')
+        telefone_adicional= request.form.get('appt-phone-alternative')
         email = request.form.get('appt-email')
         horario_da_consulta = request.form.get('appt-time')
         data = request.form.get('appt-date')
@@ -41,9 +42,9 @@ def home():
             return jsonify({"status": "fail", "data": request.form, "message": "Erro ao criar agendamento."})
         else:
             supabase.table('Notificacao').insert({'nome_cliente': nome_cliente, 'sobrenome_cliente': sobrenome_cliente,\
-           'email': email, 'data': data, 'horario_da_consulta': horario_da_consulta, 'tipo_consulta': tipo_consulta, 'telefone_ddd': telefone_ddd, 'telefone': telefone, 'ordem_pedido' : 1}).execute()
-            posts = supabase.table('Notificacao').select('*').order('created_at', desc=True)\
-            .execute()
+           'email': email, 'data': data, 'horario_da_consulta': horario_da_consulta, 'tipo_consulta': tipo_consulta, 'telefone_adicional': telefone_adicional, 'telefone': telefone, 'ordem_pedido' : 1}).execute()
+            # posts = supabase.table('Notificacao').select('*').order('created_at', desc=True)\
+            # .execute()
             return jsonify({"status": "success", "data": request.form})
     if request.method == 'GET':
         if "user" in session:
@@ -119,14 +120,12 @@ def clients():
     if request.method == "POST":
         nome = request.form["name"]
         sobrenome = request.form["last_name"]
-        telefone_ddd = request.form["telefone_ddd"]
         telefone = request.form["telefone"]
-        telefone_ddd_adicional = request.form["telefone_ddd_adicional"]
         telefone_adicional = request.form["telefone_adicional"]
         status = request.form["status"]
         crp = supabase.table('Psicologo').select('crp').eq('user_uuid', session["user_id"]).execute()
         supabase.table('Cliente').insert({'Nome': nome, 'Sobrenome': sobrenome,\
-            'telefone_ddd': telefone_ddd, 'telefone': telefone, 'telefone_ddd_adicional': telefone_ddd_adicional, 'telefone_adicional': telefone_adicional, 'crp' : crp.data[0]['crp'], 'Status' : status}).execute()
+            'telefone': telefone, 'telefone_adicional': telefone_adicional, 'crp' : crp.data[0]['crp'], 'Status' : status}).execute()
         return redirect(url_for("clients"))
     if "user" not in session:
         return render_template("login.html")
@@ -140,14 +139,11 @@ def edit_pacient(pacient_id):
     if request.method=="POST":
         nome = request.form["name"]
         sobrenome = request.form["last_name"]
-        telefone_ddd = request.form["telefone_ddd"]
         telefone = request.form["telefone"]
-        telefone_ddd_adicional = request.form["telefone_ddd_adicional"]
         telefone_adicional = request.form["telefone_adicional"]
         status = request.form["status"]
         supabase.table('Cliente').update({'Nome': nome, 'Sobrenome': sobrenome,\
-            'telefone_ddd': telefone_ddd, 'telefone': telefone, 'telefone_ddd_adicional': telefone_ddd_adicional, \
-                'telefone_adicional': telefone_adicional, 'Status' : status}).\
+            'telefone': telefone, 'telefone_adicional': telefone_adicional, 'Status' : status}).\
                 eq('id', pacient_id).execute()
         return redirect("/clients")
     return render_template("client_data.html",pacient = pacient.data)
@@ -174,6 +170,7 @@ def logout():
     supabase.auth.sign_out()
     return redirect(url_for("login"))
 
+#Função de teste para alterar itens que e testar
 @app.route ("/teste",methods=['POST','GET'])
 def default():
     # if session["google_access_token"] is None:
@@ -188,6 +185,21 @@ def default():
 
 #Funções adicionais
 
+#aceitar e negar consultas
+
+@app.route("/handle_notification", methods=['POST'])
+def handle_notification():
+    notification_id = request.json.get("id")
+    action = request.json.get("action")
+    if action == "aceita":
+        supabase.table('Notificacao').update({'status': "Aceito"}).eq('id', notification_id).execute()
+        return jsonify({"status": "success", "message": "Consulta aceita."})
+    elif action == "rejeitada":
+        supabase.table('Notificacao').update({'status': "Recusado"}).eq('id', notification_id).execute()
+        return jsonify({"status": "success", "message": "Consulta recusada."})
+    else:
+        return jsonify({"status": "fail", "message": "Ação inválida."})
+
 #Funções da Agenda
 
 def get_credentials():
@@ -197,6 +209,8 @@ def get_credentials():
     else:
         authenticate_google()
 
+
+#Obter eventos do dia selecionado
 @app.route("/get_events", methods=['POST'])
 def get_events():
     dateStr = request.json.get("dateStr")
@@ -210,6 +224,8 @@ def get_events():
     except:
         return jsonify({"status": "fail", "message": "Víncule sua conta Google para acessar os eventos no calendário."})
 
+
+#Obter evento especifico quando clicar para ver detalhes
 @app.route("/event/<string:event_id>", methods=['POST','GET'])
 def edit_event(event_id): 
     if request.method=="POST":

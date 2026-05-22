@@ -249,19 +249,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   // notifications
-  notificationList.onclick = function (event) {
+  notificationList.onclick = async function (event) {
     let item = event.target.closest(".notification-item");
 
     if (!item) return;
 
     if (event.target.closest(".action-btn")) {
       const isAccept = event.target.closest(".btn-accept");
+      const isDecline = event.target.closest(".btn-reject");
+
+      if (isAccept || isDecline) {
+        try {
+          console.log(item.id)
+          const action = isAccept ? "aceita" : "rejeitada";
+          const response = await fetch("/handle_notification", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: item.id, action: action }),
+          })
+          const response_request = await response.json();
+          console.log(response_request);
+        }catch (error) {
+          console.error("Erro ao aceitar notificação:", error);
+          return;
+        }
       item.style.transform = "translateX(100px)";
       item.style.opacity = "0";
       setTimeout(() => {
         item.remove();
       }, 300);
       return;
+      }
     }
 
     document.querySelectorAll(".notification-item").forEach((other) => {
