@@ -52,13 +52,7 @@ def get_events(access_token, dateStr): #Todos os eventos da data
   
   try:
     info = json.loads(access_token)
-    creds = Credentials(
-      token=info.get("access_token"),
-      refresh_token=info.get("refresh_token"),
-      token_uri=info.get("token_uri"),
-      client_id=info.get("client_id"),
-      client_secret=info.get("client_secret")
-    )
+    creds = build_credentials(info)
     service = build("calendar", "v3",credentials=creds)
 
     base_date = datetime.datetime.strptime(dateStr, "%Y-%m-%d")
@@ -99,13 +93,7 @@ def get_specific_event(access_token, event_id): #Apenas um eventos
   
   try:
     info = json.loads(access_token)
-    creds = Credentials(
-      token=info.get("access_token"),
-      refresh_token=info.get("refresh_token"),
-      token_uri=info.get("token_uri"),
-      client_id=info.get("client_id"),
-      client_secret=info.get("client_secret")
-    )
+    creds = build_credentials(info)
     service = build("calendar", "v3",credentials=creds)
 
     # base_date = datetime.datetime.strptime(dateStr, "%Y-%m-%d")
@@ -139,6 +127,34 @@ def obtain_credentials(access_token):
     # Save the credentials for the next run
     google_access_token = access_token.to_json()
   return google_access_token
+
+def delete_event(access_token, event_id):
+  try:
+    info = json.loads(access_token)
+    creds = build_credentials(info)
+    service = build("calendar", "v3",credentials=creds)
+    print("done1")
+    service.events().delete(
+      calendarId="primary",
+      eventId=event_id,
+      sendUpdates="all"
+    ).execute()
+    print("done2")
+    
+    return jsonify({"status": "success", "event_id_deleted": event_id})
+  
+  except HttpError as error:
+    print(f"An error occurred: {error}")
+
+def build_credentials(info):
+  creds = Credentials(
+      token=info.get("access_token"),
+      refresh_token=info.get("refresh_token"),
+      token_uri=info.get("token_uri"),
+      client_id=info.get("client_id"),
+      client_secret=info.get("client_secret")
+    )
+  return creds
 
 # if __name__ == "__main__":
 #   main()

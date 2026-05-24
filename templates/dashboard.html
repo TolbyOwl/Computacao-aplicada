@@ -24,9 +24,11 @@
       <div class="item active"><a href="/dashboard"><i class="bi-house"></i></a></div>
       <div class="item"><a href="/clients"><i class="bi-people"></i></a></div>
       <div class="item"><a href="/notes"><i class="bi-sticky"></i></a></div>
+      <div class="config"><a href="/autenticar_agenda"><i class="bi bi-google"></i></a></div>
     </div>
 
-    <div class="config"><a href="/autenticar_agenda"><i class="bi bi-google"></i></a></div>
+
+    <div class="config"><a href="/logout"><i class="bi bi-box-arrow-left"></i></a></div>
   </aside>
 
   <!-- Conteúdo -->
@@ -52,7 +54,7 @@
       <div class="notification-main">
         <div class="notification-avatar">JM</div> <!--Variavel avatar-->
         <div class="notification-content">
-          <p class="notification-text">{{ notification.nome_cliente }} - {{ notification.tipo_consulta }}</p>
+          <p class="notification-text">{{ notification.nome }} - {{ notification.tipo_consulta }}</p>
           <span class="notification-time"><i class="ri-calendar-line"></i> {{ notification.data }} às {{ notification.horario_da_consulta }}</span> 
         </div>
       </div> 

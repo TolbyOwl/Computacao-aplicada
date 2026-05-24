@@ -23,8 +23,8 @@ app.secret_key = os.getenv("secret_key")  # Change this to a secure key
 def home():
     if request.method == 'POST': #Tem que adicionar e verificação de token aqui, para não duplicar adições ao recarregar a página
         print(request.form)
-        nome_cliente = request.form.get('appt-name')
-        sobrenome_cliente = request.form.get('appt-lastname')
+        nome = request.form.get('appt-name')
+        sobrenome = request.form.get('appt-lastname')
         telefone_ddd = request.form.get('appt-ddd')
         telefone = request.form.get('appt-phone')
         telefone_adicional= request.form.get('appt-phone-alternative')
@@ -32,8 +32,8 @@ def home():
         horario_da_consulta = request.form.get('appt-time')
         data = request.form.get('appt-date')
         tipo_consulta = request.form.get('appt-service')
-        print(nome_cliente, sobrenome_cliente, email, data)
-        agendamento_existente = supabase.table('Notificacao').select('email').eq('email', email).eq('data', data).execute()
+
+        agendamento_existente = supabase.table('Notificacao').select('telefone').eq('telefone', telefone).eq('data', data).execute()
         try:
             if agendamento_existente.data:
                 mensagem='Agendamento já existente para este email. Inicie sessão para gerenciar!'
@@ -41,8 +41,8 @@ def home():
         except AttributeError:
             return jsonify({"status": "fail", "data": request.form, "message": "Erro ao criar agendamento."})
         else:
-            supabase.table('Notificacao').insert({'nome_cliente': nome_cliente, 'sobrenome_cliente': sobrenome_cliente,\
-           'email': email, 'data': data, 'horario_da_consulta': horario_da_consulta, 'tipo_consulta': tipo_consulta, 'telefone_adicional': telefone_adicional, 'telefone': telefone, 'ordem_pedido' : 1}).execute()
+            supabase.table('Notificacao').insert({'nome': nome, 'sobrenome': sobrenome,\
+           'data': data, 'horario_da_consulta': horario_da_consulta, 'tipo_consulta': tipo_consulta, 'telefone_adicional': telefone_adicional, 'telefone': telefone, 'ordem_pedido' : 1}).execute()
             # posts = supabase.table('Notificacao').select('*').order('created_at', desc=True)\
             # .execute()
             return jsonify({"status": "success", "data": request.form})
@@ -97,6 +97,8 @@ def login():
             except:
                 session["google_access_token"] = None
             session["user_id"] = response.user.id
+            crp = supabase.table("Psicologo").select('crp').eq('user_uuid',session["user_id"]).execute()
+            session["crp"] = crp.data[0]['crp']
             session["first_name"] = response.user.user_metadata.get("first_name")
             session["last_name"] = response.user.user_metadata.get("last_name")
             # print(session.google_access_token)
@@ -106,6 +108,8 @@ def login():
     if request.method == 'GET':
         return render_template("login.html")
 
+
+#funções de dashboard
 @app.route("/dashboard", methods=['POST', 'GET'])
 def dash():
     if "user" not in session:
@@ -117,20 +121,19 @@ def dash():
 
 @app.route("/clients", methods=['POST', 'GET'])
 def clients():
+    crp = session['crp']
     if request.method == "POST":
         nome = request.form["name"]
         sobrenome = request.form["last_name"]
         telefone = request.form["telefone"]
         telefone_adicional = request.form["telefone_adicional"]
         status = request.form["status"]
-        crp = supabase.table('Psicologo').select('crp').eq('user_uuid', session["user_id"]).execute()
         supabase.table('Cliente').insert({'Nome': nome, 'Sobrenome': sobrenome,\
-            'telefone': telefone, 'telefone_adicional': telefone_adicional, 'crp' : crp.data[0]['crp'], 'Status' : status}).execute()
+            'telefone': telefone, 'telefone_adicional': telefone_adicional, 'crp' : crp, 'Status' : status}).execute()
         return redirect(url_for("clients"))
     if "user" not in session:
         return render_template("login.html")
-    crp = supabase.table('Psicologo').select('crp').eq('user_uuid', session["user_id"]).execute()
-    pacients = supabase.table('Cliente').select('*').eq('crp', crp.data[0]['crp']).order('created_at', desc=True).execute()
+    pacients = supabase.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
     return render_template("clients.html", pacients = pacients.data)
 
 @app.route("/client/<pacient_id>", methods=['POST','GET'])
@@ -191,8 +194,12 @@ def default():
 def handle_notification():
     notification_id = request.json.get("id")
     action = request.json.get("action")
+    crp = session['crp']
     if action == "aceita":
         supabase.table('Notificacao').update({'status': "Aceito"}).eq('id', notification_id).execute()
+        notification_content=supabase.table('Notificacao').select('*').eq('id', notification_id).single().execute()
+        data=notification_content.data
+        supabase.table('Cliente').insert({'crp': crp,'Nome' : data['nome'],'Sobrenome' : data['sobrenome'],'telefone' : data['telefone'],'telefone_adicional' : data['telefone_adicional'], 'Status' : 'ativo'}).execute()
         return jsonify({"status": "success", "message": "Consulta aceita."})
     elif action == "rejeitada":
         supabase.table('Notificacao').update({'status': "Recusado"}).eq('id', notification_id).execute()
@@ -240,7 +247,11 @@ def edit_event(event_id):
         except:
             return jsonify({"status": "fail", "message": "Víncule sua conta Google para acessar os eventos no calendário."})
 
-
+#Deletar um evento
+@app.route("/delete_event/<string:event_id>", methods=['GET'])
+def delete_event(event_id):
+    agenda.delete_event(access_token=session["google_access_token"], event_id=event_id)
+    return redirect("/dashboard")
 
 #Execução
 if __name__ == '__main__':
