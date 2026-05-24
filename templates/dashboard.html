@@ -81,7 +81,15 @@
 
     <!-- Próxima sessão -->
     <div class="next-session">
-      BLOCO PRÓXIMA SESSÃO (DESTAQUE VISUAL)
+    {% if next_event %}
+    {% set date_parts = next_event[0].start.dateTime.split('T')[0].split('-') %}
+        <p class="notification-text">Sua próxima consulta será {{ next_event[0].summary }}</p>
+        <span class="notification-time"><i class="ri-calendar-line"></i> Em {{ date_parts[2] }}/{{ date_parts[1] }}/{{ date_parts[0] }} às {{ next_event[0].start.dateTime.split('T')[1][:5] }}</span> 
+    {% else %}
+      <div class="notification-main">
+        <p class="notification-text"> Sem consultas agendadas. </p>
+      </div>
+    {% endif %}
     </div>
 
     <!-- Parte inferior -->

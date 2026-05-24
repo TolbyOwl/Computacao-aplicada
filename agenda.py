@@ -89,6 +89,25 @@ def get_events(access_token, dateStr): #Todos os eventos da data
   except HttpError as error:
     print(f"An error occurred: {error}")
 
+def next_event(access_token):
+  try:
+    info = json.loads(access_token)
+    creds = build_credentials(info)
+    service = build("calendar", "v3",credentials=creds)
+    now = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=-3))).isoformat()
+    events_result = (service.events().list(
+      calendarId="primary",
+      timeMin=now,
+      maxResults=1,
+      singleEvents=True,
+      ).execute()
+    )
+    next_event = events_result.get("items", [])
+    
+    return next_event
+  except HttpError as error:
+    print(f"An error occurred: {error}")
+
 def get_specific_event(access_token, event_id): #Apenas um eventos
   
   try:

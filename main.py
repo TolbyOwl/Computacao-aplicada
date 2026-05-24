@@ -117,7 +117,8 @@ def dash():
      #definir prioridade com uma variavel
     # psicologo_type = supabase.table('Psicologo').select('tipo_consulta').eq('user_uuid',session["user_id"]).execute()
     notifications_pending = supabase.table('Notificacao').select('*').eq('status', "Pendente").order('created_at', desc=True).execute()
-    return render_template("dashboard.html", user=session["first_name"], notifications_pending = notifications_pending.data)
+    next_event = agenda.next_event(access_token=session['google_access_token'])
+    return render_template("dashboard.html", user=session["first_name"], notifications_pending = notifications_pending.data, next_event=next_event)
 
 @app.route("/clients", methods=['POST', 'GET'])
 def clients():
@@ -252,6 +253,14 @@ def edit_event(event_id):
 def delete_event(event_id):
     agenda.delete_event(access_token=session["google_access_token"], event_id=event_id)
     return redirect("/dashboard")
+
+
+# NOTAS
+
+@app.route("/take_note",methods=['GET'])
+def take_note():
+    return render_template("take_note.html")
+
 
 #Execução
 if __name__ == '__main__':
