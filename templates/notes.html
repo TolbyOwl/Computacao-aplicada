@@ -111,7 +111,14 @@
         // Show the popup form when the button is clicked
         openPopupBtn.addEventListener('click', function() {
           popupForm.style.display = 'flex'; // Use flex to center the popup
-          
+          $('#summernote').summernote({
+            lang: 'pt-BR',
+            placeholder: 'Pronto para digitar...',
+            tabsize: 2,
+            height: 200,
+            minHeight:null,
+            maxHeight: null,
+          });
         });
 
         // Hide the popup form when the close button is clicked
