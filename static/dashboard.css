@@ -809,7 +809,7 @@ body {
 .btn {
   padding: 12px;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 5px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -817,4 +817,9 @@ body {
   justify-content: center;
   gap: 8px;
   transition: var(--transition);
+  background-color: var(--primary);
+  color: var(--light);
+}
+.btn:hover {
+  background-color: var(--secondary);
 }
