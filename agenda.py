@@ -159,7 +159,10 @@ def add_event(access_token,event_data):
     info = json.loads(access_token)
     creds = build_credentials(info)
     service = build("calendar", "v3",credentials=creds)
-    combined_str = f"{event_data['data']} {event_data['horario']}"
+    supabase_time = event_data['horario']
+    if len(supabase_time) > 5:
+      supabase_time = supabase_time[:5]
+    combined_str = f"{event_data['data']} {supabase_time}"
     start_datetime = datetime.datetime.strptime(combined_str,"%Y-%m-%d %H:%M")
     duration_minutes = int(event_data['duracao'])
     end_datetime = start_datetime + timedelta(minutes=duration_minutes)
@@ -194,6 +197,42 @@ def add_event(access_token,event_data):
     }
 
     event = service.events().insert(calendarId='primary', body=event).execute()
+    print ('Event created: %s' % (event.get('htmlLink')))
+    
+    return jsonify({"status": "success"})
+  
+  except HttpError as error:
+    print(f"An error occurred: {error}")
+
+def patch_event(access_token,event_data):
+  try:
+    info = json.loads(access_token)
+    creds = build_credentials(info)
+    service = build("calendar", "v3",credentials=creds)
+    supabase_time = event_data['horario']
+    if len(supabase_time) > 5:
+      supabase_time = supabase_time[:5]
+    combined_str = f"{event_data['data']} {supabase_time}"
+    start_datetime = datetime.datetime.strptime(combined_str,"%Y-%m-%d %H:%M")
+    duration_minutes = int(event_data['duracao'])
+    end_datetime = start_datetime + timedelta(minutes=duration_minutes)
+
+    start_iso = start_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+    end_iso = end_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+    timezone_str = "America/Sao_Paulo"
+
+    event = {
+      'start': {
+        'dateTime': start_iso,
+        'timeZone': timezone_str,
+      },
+      'end': {
+        'dateTime': end_iso,
+        'timeZone': timezone_str,
+      },
+    }
+
+    event = service.events().patch(calendarId='primary', eventId=event_data['id'], body=event).execute()
     print ('Event created: %s' % (event.get('htmlLink')))
     
     return jsonify({"status": "success"})

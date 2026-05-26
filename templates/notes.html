@@ -46,23 +46,21 @@
     <div class="title">Anotações</div>
     <!-- Área principal -->
     <div class="cards" id="cardsContainer">
-          {% for pacient in pacients %}
-          <div class="card patient-card open-pacient-btn" data-status="{{ pacient.Status }}" data-event-id="{{ pacient.id }}">
+          {% for note in notes %}
+          {% set date_parts = note.created_at.split('T')[0].split('-') %}
+          <div class="card patient-card open-pacient-btn" data-note-id="{{ note.id }}">
             <div class="card-header">
-              <!-- Avatar -->
-              <div class="avatar">JM</div>
               <div class="patient-info">
-                <h3 class="patient-name">{{ pacient.Nome }} {{pacient.Sobrenome}}</h3>
-                <span class="status {{pacient.Status}}">{{pacient.Status}}</span>
+                <h3 class="patient-name">{{ note.titulo }}</h3>
               </div>
             </div>
 
             <div class="sessions">
               <div class="session-info">
-                <span>Última Sessão</span><span>08/05/2026</span>
+                <span>Paciente</span><span>{{ note.Cliente.Nome }} {{ note.Cliente.Sobrenome }}</span>
               </div>
               <div class="session-info">
-                <span>Próxima Sessão</span><span>15/05/2026</span>
+                <span>Criada em</span><span>{{ date_parts[2] }}/{{ date_parts[1] }}/{{ date_parts[0] }} às {{ note.formatted_time }}</span>
               </div>
             </div>
           </div>
@@ -113,14 +111,7 @@
         // Show the popup form when the button is clicked
         openPopupBtn.addEventListener('click', function() {
           popupForm.style.display = 'flex'; // Use flex to center the popup
-          $('#summernote').summernote({
-            lang: 'pt-BR',
-            placeholder: 'Pronto para digitar...',
-            tabsize: 2,
-            height: 200,
-            minHeight:null,
-            maxHeight: null,
-          });
+          
         });
 
         // Hide the popup form when the close button is clicked
@@ -138,8 +129,8 @@
         openPacientBtns.forEach(btn => {
             btn.addEventListener('click',function(event){
                 // popupPacient.style.display = 'flex';
-                const eventId = this.dataset.eventId;
-                window.location.href = `/client/${eventId}`;
+                const noteId = this.dataset.noteId;
+                window.location.href = `/note/${noteId}`;
             });
         });
   </script>  

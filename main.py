@@ -6,6 +6,7 @@ from supabase import create_client, Client
 from dotenv import load_dotenv
 import os
 import agenda
+from datetime import datetime, timedelta
 
 load_dotenv() #Carrega a auteticação do supabase a partir do arquivo .env
 url=os.getenv("SUPABASE_URL")
@@ -211,6 +212,14 @@ def handle_notification():
         notification_content=supabase.table('Notificacao').select('*').eq('id', notification_id).single().execute()
         data=notification_content.data
         supabase.table('Cliente').insert({'crp': crp,'Nome' : data['nome'],'Sobrenome' : data['sobrenome'],'telefone' : data['telefone'],'telefone_adicional' : data['telefone_adicional'], 'Status' : 'ativo'}).execute()
+        event_data = {
+            'paciente' : data['nome'] + ' ' + data['sobrenome'],
+            'data' : data['data'],
+            'horario' : data['horario_da_consulta'],
+            'duracao' : 30,
+            'recorrencia' : None
+        }
+        agenda.add_event(access_token=session["google_access_token"],event_data=event_data)         
         return jsonify({"status": "success", "message": "Consulta aceita."})
     elif action == "rejeitada":
         supabase.table('Notificacao').update({'status': "Recusado"}).eq('id', notification_id).execute()
@@ -247,14 +256,24 @@ def get_events():
 @app.route("/event/<string:event_id>", methods=['POST','GET'])
 def edit_event(event_id): 
     if request.method=="POST":
-        pass
+        event_data = {
+            'id' : event_id,
+            'data' : request.form['date'],
+            'horario' : request.form['time'],
+            'duracao' : request.form['duration'],
+        } 
+        agenda.patch_event(access_token=session['google_access_token'],event_data=event_data)
+        return redirect(url_for("dash"))
     if request.method=="GET":
         try:
             if "google_access_token" not in session:
                 session["google_access_token"] = supabase.auth.admin.get_user_by_id(session["user_id"]).user.user_metadata.get("google_access_token")
             if "google_access_token" in session:  
                 event_details = agenda.get_specific_event(access_token=session["google_access_token"], event_id=event_id)
-                return render_template("event_data.html", event=event_details)
+                start = datetime.fromisoformat(event_details['start']['dateTime'].replace('Z','+00:00'))
+                end = datetime.fromisoformat(event_details['end']['dateTime'].replace('Z','+00:00'))
+                event_duration = int((end-start).total_seconds()/60)
+                return render_template("event_data.html", event=event_details, event_duration=event_duration)
         except:
             return jsonify({"status": "fail", "message": "Víncule sua conta Google para acessar os eventos no calendário."})
 
@@ -267,11 +286,36 @@ def delete_event(event_id):
 
 # NOTAS
 
-@app.route("/notes",methods=['GET'])
+@app.route("/notes",methods=['GET',"POST"])
 def notes():
     crp = session['crp']
     pacients = supabase.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
-    return render_template("notes.html", pacients=pacients.data)
+    notes = supabase.table('Nota').select('*, Cliente!uuid(Nome, Sobrenome)').eq('crp', crp).order('created_at', desc=True).execute()
+    for note in notes.data:
+        utc_time = datetime.fromisoformat(note['created_at'].replace('Z', '+00:00'))
+        sp_time = utc_time - timedelta(hours=3)
+        note['formatted_time'] = sp_time.strftime('%H:%M')
+    if request.method=="POST":
+        titulo = request.form['titulo']
+        content = request.form['editordata']
+        uuid = request.form['paciente']
+        supabase.table("Nota").insert({'titulo': titulo, 'content' : content,'uuid' : uuid, 'crp' : crp}).execute()
+        return redirect(url_for("notes"))
+    return render_template("notes.html", pacients=pacients.data,notes=notes.data)
+
+
+@app.route("/note/<int:note_id>", methods=['POST','GET'])
+def edit_note(note_id): 
+    crp = session['crp']
+    note = supabase.table('Nota').select('*, Cliente!uuid(Nome, Sobrenome)').eq('id', note_id).eq('crp', crp).single().execute()
+    pacients = supabase.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
+    if request.method=="POST":
+        titulo = request.form['titulo']
+        content = request.form['editordata']
+        uuid = request.form['paciente']
+        supabase.table('Nota').update({'titulo': titulo, 'content' : content,'uuid' : uuid, 'crp' : crp}).eq('id', note_id).execute()
+        return redirect(url_for("notes"))
+    return render_template("note_data.html",pacients = pacients.data,note=note.data)
 
 @app.route("/take_note",methods=['GET'])
 def take_note():

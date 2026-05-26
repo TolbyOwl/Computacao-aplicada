@@ -15,16 +15,19 @@
       <div id="popupPacient" class="popup-form-edit">
         <div class="form-content">
             <a href="/dashboard"><span class="close-btn" id="closePacientBtn">&times;</span></a>
-            <h2>Editar evento</h2>
+            <h2>{{ event.summary }}</h2>
             <form id="popupContactForm" method="post">
-                <div class="input-group">
-                    <input type="text" id="summary" name="summary" value="{{ event.summary }}" required>
-                </div>
                 <div class="input-group">
                     <input type="date" id="date" name="date" value="{{ event.start.dateTime.split('T')[0] }}" required>
                 </div>
                 <div class="input-group">
                     <input type="time" id="time" name="time" value="{{ event.start.dateTime.split('T')[1][:5] }}" required>
+                </div>
+                <div class="input-group">
+                <select id="duration" name="duration" required>
+                    <option value="30" {% if event_duration== 30 %}selected{% endif %}>30 minutos</option>
+                    <option value="60" {% if event_duration== 60 %}selected{% endif %}>1 hora</option>
+                </select>
                 </div>
                 <div class="input-group">
                     <button type="submit" class="btn">Atualizar</button>

@@ -460,3 +460,7 @@ body {
   resize: vertical;
 }
 
+.note-toolbar {
+  display: flex;
+  flex-wrap: wrap; 
+}

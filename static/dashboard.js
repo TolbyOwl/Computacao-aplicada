@@ -199,10 +199,16 @@ document.addEventListener("DOMContentLoaded", function () {
     ) {
       dayEvents.events.forEach((event) => {
         let eventTime = "Dia todo";
+        let eventEndTime="";
 
         if (event.start.dateTime && event.end.dateTime) {
           const dateObj = new Date(event.start.dateTime);
           eventTime = dateObj.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          const endDateObj = new Date(event.end.dateTime);
+          eventEndTime = endDateObj.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           });
@@ -213,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function () {
         eventItem.innerHTML = `
           <a href="/event/${event.id}" class="event-link">
             <div class="event-color"></div>
-            <div class="event-time">${eventTime}</div>
+            <div class="event-time">${eventTime} - ${eventEndTime}</div>
             <div class="event-text">${event.summary}</div>
           </a>
         `;
