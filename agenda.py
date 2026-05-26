@@ -1,20 +1,6 @@
-# Copyright 2018 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 # [START calendar_quickstart]
 import datetime
-import os.path
+# import os.path
 
 from flask import jsonify, json
 from google.auth.transport.requests import Request
@@ -22,6 +8,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from datetime import timedelta
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
@@ -69,6 +56,7 @@ def get_events(access_token, dateStr): #Todos os eventos da data
             calendarId="primary",
             timeMin=start_time.isoformat(),
             timeMax=end_time.isoformat(),
+            q="Consulta com",
             maxResults=30,
             singleEvents=True,
             orderBy="startTime",
@@ -98,6 +86,8 @@ def next_event(access_token):
     events_result = (service.events().list(
       calendarId="primary",
       timeMin=now,
+      q="Consulta com",
+      orderBy="startTime",
       maxResults=1,
       singleEvents=True,
       ).execute()
@@ -152,15 +142,61 @@ def delete_event(access_token, event_id):
     info = json.loads(access_token)
     creds = build_credentials(info)
     service = build("calendar", "v3",credentials=creds)
-    print("done1")
     service.events().delete(
       calendarId="primary",
       eventId=event_id,
       sendUpdates="all"
     ).execute()
-    print("done2")
     
     return jsonify({"status": "success", "event_id_deleted": event_id})
+  
+  except HttpError as error:
+    print(f"An error occurred: {error}")
+
+
+def add_event(access_token,event_data):
+  try:
+    info = json.loads(access_token)
+    creds = build_credentials(info)
+    service = build("calendar", "v3",credentials=creds)
+    combined_str = f"{event_data['data']} {event_data['horario']}"
+    start_datetime = datetime.datetime.strptime(combined_str,"%Y-%m-%d %H:%M")
+    duration_minutes = int(event_data['duracao'])
+    end_datetime = start_datetime + timedelta(minutes=duration_minutes)
+
+    start_iso = start_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+    end_iso = end_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+    timezone_str = "America/Sao_Paulo"
+
+    recurrence_variable = []
+    if event_data.get('recorrencia') and str(event_data['recorrencia']).lower() not in ['no', 'false', 'none']:
+      recurrence_variable = ['RRULE:FREQ=WEEKLY;COUNT=4']
+    event = {
+      'summary': 'Consulta com ' + event_data['paciente'],
+      'start': {
+        'dateTime': start_iso,
+        'timeZone': timezone_str,
+      },
+      'end': {
+        'dateTime': end_iso,
+        'timeZone': timezone_str,
+      },
+      'recurrence': [
+        recurrence_variable if recurrence_variable else None,
+      ],
+      'reminders': {
+        'useDefault': False,
+        'overrides': [
+          {'method': 'email', 'minutes': 24 * 60},
+          {'method': 'popup', 'minutes': 10},
+        ],
+      },
+    }
+
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    print ('Event created: %s' % (event.get('htmlLink')))
+    
+    return jsonify({"status": "success"})
   
   except HttpError as error:
     print(f"An error occurred: {error}")

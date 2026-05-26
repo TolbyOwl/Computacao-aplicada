@@ -114,11 +114,19 @@ def login():
 def dash():
     if "user" not in session:
         return redirect(url_for("login"))
-     #definir prioridade com uma variavel
-    # psicologo_type = supabase.table('Psicologo').select('tipo_consulta').eq('user_uuid',session["user_id"]).execute()
+    if request.method=="POST":
+        event_data = {
+            'paciente' : request.form['pacient'],
+            'data' : request.form['date'],
+            'horario' : request.form['time'],
+            'duracao' : request.form['duration'],
+            'recorrencia' : request.form['recurrent']
+        } 
+        agenda.add_event(access_token=session['google_access_token'],event_data=event_data)
+        return redirect(url_for("dash"))
     notifications_pending = supabase.table('Notificacao').select('*').eq('status', "Pendente").order('created_at', desc=True).execute()
     crp = session['crp']
-    pacients = supabase.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
+    pacients = supabase.table('Cliente').select('*').eq('crp', crp).eq('Status',"ativo").order('created_at', desc=True).execute()
     next_event = agenda.next_event(access_token=session['google_access_token'])
     return render_template("dashboard.html", user=session["first_name"], notifications_pending = notifications_pending.data, next_event=next_event,pacients=pacients.data)
 

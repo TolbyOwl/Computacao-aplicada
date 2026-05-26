@@ -83,7 +83,7 @@
     <div class="next-session">
     {% if next_event %}
     {% set date_parts = next_event[0].start.dateTime.split('T')[0].split('-') %}
-        <p class="notification-text">Sua próxima consulta será {{ next_event[0].summary }}</p>
+        <p class="notification-text">{{ next_event[0].summary }} é a próxima na agenda</p>
         <span class="notification-time"><i class="ri-calendar-line"></i> Em {{ date_parts[2] }}/{{ date_parts[1] }}/{{ date_parts[0] }} às {{ next_event[0].start.dateTime.split('T')[1][:5] }}</span> 
     {% else %}
       <div class="notification-main">
@@ -163,9 +163,9 @@
             <form id="popupContactForm" method="post">
                 <div class="input-group">
                     <label for="paciente">Paciente</label>
-                    <select id="paciente" name="paciente" required>
+                    <select id="paciente" name="pacient" required>
                       {% for pacient in pacients %}
-                      <option value="{{pacient.id}}">{{ pacient.Nome }} {{pacient.Sobrenome}}</option>
+                      <option value="{{ pacient.Nome }} {{pacient.Sobrenome}}">{{ pacient.Nome }} {{pacient.Sobrenome}}</option>
                       {% endfor %}
                     </select>
                 </div>
@@ -185,7 +185,7 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <label for="recurrent">Ativar recorrencia semanal?</label>
+                    <label for="recurrent">Ativar recorrencia semanal por um mês?</label>
                     <select id="recurrent" name="recurrent" required>
                       <option value="WEEKLY">Sim</option>
                       <option value="">Não</option>
