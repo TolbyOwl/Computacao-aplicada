@@ -18,7 +18,7 @@
 
   <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="logo">Logo</div>
+    <div class="item"><a href="/"><i class="bi bi-arrow-left-circle"></i></a></div>
 
     <div class="menu">
       <div class="item active"><a href="/dashboard"><i class="bi-house"></i></a></div>
@@ -52,7 +52,7 @@
     {% for notification in notifications_pending %}
     <div class="notification-item" id="{{ notification.id }}">
       <div class="notification-main">
-        <div class="notification-avatar">JM</div> <!--Variavel avatar-->
+        <div class="notification-avatar"><i class="bi bi-person"></i></div> <!--Variavel avatar-->
         <div class="notification-content">
           <p class="notification-text">{{ notification.nome }} - {{ notification.tipo_consulta }}</p>
           <span class="notification-time"><i class="ri-calendar-line"></i> {{ notification.data }} às {{ notification.horario_da_consulta }}</span> 
@@ -102,7 +102,7 @@
         <div class="event-panel" id="event-panel">
           <div class="event-header">
             <div class="event-date" id="event-date">Select a date</div>
-            <a href="/new-consult/" id="new-event-btn"><i class="fas fa-calendar-alt event-icon"> <i class="bi bi-plus-circle-fill"></i></i></a>
+            <a href="#" id="openPopupBtn"><i class="fas fa-calendar-alt event-icon"> <i class="bi bi-plus-circle-fill"></i></i></a>
           </div>
           <div class="event-list" id="event-list">
             <div class="no-events">Selecione uma data para visualizar os eventos</div>
@@ -154,6 +154,49 @@
   </main>
 
 </div>
+
+      <div id="popupForm" class="popup-form">
+        <div class="form-content">
+            <span class="close-btn" id="closePopupBtn">&times;</span>
+            <h2>Nova consulta</h2>
+            <br>
+            <form id="popupContactForm" method="post">
+                <div class="input-group">
+                    <label for="paciente">Paciente</label>
+                    <select id="paciente" name="paciente" required>
+                      {% for pacient in pacients %}
+                      <option value="{{pacient.id}}">{{ pacient.Nome }} {{pacient.Sobrenome}}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="date">Data</label>
+                    <input type="date" id="date" name="date" value="" required>
+                </div>
+                <div class="input-group">
+                    <label for="time">Horário</label>
+                    <input type="time" id="time" name="time" required>
+                </div>
+                  <div class="input-group">
+                    <label for="duration">Duração da consulta</label>
+                    <select id="duration" name="duration" required>
+                      <option value="30">30 minutos</option>
+                      <option value="60">1 hora</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="recurrent">Ativar recorrencia semanal?</label>
+                    <select id="recurrent" name="recurrent" required>
+                      <option value="WEEKLY">Sim</option>
+                      <option value="">Não</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <button type="submit" class="btn">Adicionar</button>
+                </div>
+            </form>
+        </div>
+      </div>   
 
 <script src="static/dashboard.js"></script>
 

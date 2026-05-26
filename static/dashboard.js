@@ -6,15 +6,20 @@ document.addEventListener("DOMContentLoaded", function () {
   const todayBtn = document.getElementById("today-btn");
   const eventPanel = document.getElementById("event-panel");
   const eventDateEl = document.getElementById("event-date");
-  const newEventBtn = document.getElementById("new-event-btn");
+  const newEventDate = document.getElementById("date");
   const eventListEl = document.getElementById("event-list");
   const notificationList = document.querySelector(".notification-list");
+  const popupForm = document.getElementById('popupForm');
+  const openPopupBtn = document.getElementById('openPopupBtn');
+  const closePopupBtn = document.getElementById('closePopupBtn');
+  const openPacientBtns = document.querySelectorAll('.open-pacient-btn');
 
   let currentDate = new Date();
   let selectedDate = null;
 
   // Sample events data
   let events = {};
+
 
   // Render calendar
   function renderCalendar() {
@@ -152,6 +157,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const [year, month, day] = dateStr.split("-").map(Number);
+    const paddedMonth = String(month).padStart(2, '0');
+    const paddedDay = String(day).padStart(2, '0');
     const dateObj = new Date(year, month - 1, day);
     const months = [
       "Janeiro",
@@ -180,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const dayName = dayNames[dateObj.getDay()];
 
     eventDateEl.textContent = `${dayName}, ${day} de ${months[dateObj.getMonth()]} de ${year}`;
-    newEventBtn.href = `/new-consult/${dateStr}`;
+    newEventDate.value = `${year}-${paddedMonth}-${paddedDay}`;
 
     // Clear previous events
     eventListEl.innerHTML = "";
@@ -291,6 +298,22 @@ document.addEventListener("DOMContentLoaded", function () {
     item.classList.toggle("active");
   };
 
+    // Show the popup form when the button is clicked
+  openPopupBtn.addEventListener('click', function() {
+    popupForm.style.display = 'flex'; // Use flex to center the popup
+  });
+
+  // Hide the popup form when the close button is clicked
+  closePopupBtn.addEventListener('click', function() {
+    popupForm.style.display = 'none';
+  });
+
+  // Hide the popup form when clicking outside the form content
+  window.addEventListener('click', function(event) {
+    if (event.target == popupForm) {
+      popupForm.style.display = 'none';
+    }
+  });
 
     // Initialize calendar 
   
@@ -298,3 +321,4 @@ document.addEventListener("DOMContentLoaded", function () {
   const todayStr = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
   showEvents(todayStr);
 });
+

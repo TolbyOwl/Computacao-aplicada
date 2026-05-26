@@ -117,8 +117,10 @@ def dash():
      #definir prioridade com uma variavel
     # psicologo_type = supabase.table('Psicologo').select('tipo_consulta').eq('user_uuid',session["user_id"]).execute()
     notifications_pending = supabase.table('Notificacao').select('*').eq('status', "Pendente").order('created_at', desc=True).execute()
+    crp = session['crp']
+    pacients = supabase.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
     next_event = agenda.next_event(access_token=session['google_access_token'])
-    return render_template("dashboard.html", user=session["first_name"], notifications_pending = notifications_pending.data, next_event=next_event)
+    return render_template("dashboard.html", user=session["first_name"], notifications_pending = notifications_pending.data, next_event=next_event,pacients=pacients.data)
 
 @app.route("/clients", methods=['POST', 'GET'])
 def clients():
@@ -256,6 +258,12 @@ def delete_event(event_id):
 
 
 # NOTAS
+
+@app.route("/notes",methods=['GET'])
+def notes():
+    crp = session['crp']
+    pacients = supabase.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
+    return render_template("notes.html", pacients=pacients.data)
 
 @app.route("/take_note",methods=['GET'])
 def take_note():
