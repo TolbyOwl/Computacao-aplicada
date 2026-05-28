@@ -343,19 +343,18 @@
       btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Enviando...';
 
       try {
-      const formData = new FormData(appointmentForm);
-      const response = await fetch("", {
-        method: "POST",
-        body: formData,
-      });
-      response_request = await response.json();
-      console.log(response_request);
+        const formData = new FormData(appointmentForm);
+        const response = await fetch("", {
+          method: "POST",
+          body: formData,
+        });
+        response_request = await response.json();
+        console.log(response_request);
+      } catch (error) {
+        console.error(error);
+        response_request.message = error.message || "Erro desconhecido";
+        response_request.status = "fail";
       }
-      catch (error) {console.error(error);
-      response_request.message = error.message || "Erro desconhecido";
-      response_request.status = "fail";
-      }
-
 
       setTimeout(() => {
         btn.disabled = false;
@@ -382,23 +381,26 @@
             const today = new Date().toISOString().split("T")[0];
             dateInput.setAttribute("min", today);
           }
-        }
-        else if (response_request.status === "fail" && response_request.message.includes("Agendamento já existente")) {
+        } else if (
+          response_request.status === "fail" &&
+          response_request.message.includes("Agendamento já existente")
+        ) {
           formFeedbackEl.className = "form-feedback error";
-          formFeedbackEl.innerHTML = "⚠️ Parece que já existe um agendamento para este email e data. Por favor, verifique seus dados ou inicie sessão para gerenciar seus agendamentos.";
+          formFeedbackEl.innerHTML =
+            "⚠️ Parece que já existe um agendamento para este email e data. Por favor, verifique seus dados ou inicie sessão para gerenciar seus agendamentos.";
+          formFeedbackEl.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+          });
+        } else {
+          formFeedbackEl.className = "form-feedback error";
+          formFeedbackEl.innerHTML =
+            "❌ Ocorreu um erro ao enviar sua solicitação. Por favor, tente novamente mais tarde ou entre em contato conosco.";
           formFeedbackEl.scrollIntoView({
             behavior: "smooth",
             block: "nearest",
           });
         }
-        else {
-          formFeedbackEl.className = "form-feedback error";
-          formFeedbackEl.innerHTML = "❌ Ocorreu um erro ao enviar sua solicitação. Por favor, tente novamente mais tarde ou entre em contato conosco.";
-          formFeedbackEl.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-          });
-        } 
 
         setTimeout(() => {
           if (formFeedbackEl) formFeedbackEl.className = "form-feedback";
@@ -435,4 +437,32 @@
       }
     });
   });
+
+  // mascara telefone
+  const handlePhone = (event) => {
+    let input = event.target;
+    input.value = maskPhone(input.value);
+  };
+
+  const maskPhone = (v) => {
+    v = v.replace(/\D/g, "");
+    v = v.substring(0, 11);
+
+    if (v.length === 0) return "";
+    if (v.length <= 2) return `(${v}`;
+    if (v.length <= 6) return `(${v.substring(0, 2)}) ${v.substring(2)}`;
+    if (v.length <= 10)
+      return `(${v.substring(0, 2)}) ${v.substring(2, 6)}-${v.substring(6)}`;
+    return `(${v.substring(0, 2)}) ${v.substring(2, 7)}-${v.substring(7)}`;
+  };
+
+  const apptPhoneInput = document.getElementById("appt-phone");
+  const apptPhoneAltInput = document.getElementById("appt-phone-alternative");
+
+  if (apptPhoneInput) {
+    apptPhoneInput.addEventListener("input", handlePhone);
+  }
+  if (apptPhoneAltInput) {
+    apptPhoneAltInput.addEventListener("input", handlePhone);
+  }
 })();
