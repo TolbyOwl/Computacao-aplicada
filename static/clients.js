@@ -3,9 +3,13 @@
         const closePopupBtn = document.getElementById('closePopupBtn');
         // const popupPacient = document.getElementById('popupPacient');
         const openPacientBtns = document.querySelectorAll('.open-pacient-btn');
+        const openPopupBtn2 = document.getElementById('openPopupBtn2');
         // const closePacientBtn = document.getElementById('closePacientBtn');        
         
         // Show the popup form when the button is clicked
+        openPopupBtn2.addEventListener('click', function() {
+            popupForm.style.display = 'flex'; // Use flex to center the popup
+        });
         openPopupBtn.addEventListener('click', function() {
             popupForm.style.display = 'flex'; // Use flex to center the popup
         });
