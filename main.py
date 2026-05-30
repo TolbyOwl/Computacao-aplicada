@@ -10,9 +10,10 @@ from datetime import datetime, timedelta
 
 load_dotenv() #Carrega a auteticação do supabase a partir do arquivo .env
 url=os.getenv("SUPABASE_URL")
-key=os.getenv("SUPABASE_KEY")
+key=os.getenv("ANON_KEY")
 
 supabase: Client = create_client(url, key)
+supabase_admin = create_client(url, os.getenv("SERVICE_ROLE_KEY"))
 
 app = Flask(__name__)
 app.secret_key = os.getenv("secret_key")  # Change this to a secure key
@@ -127,9 +128,11 @@ def dash():
         return redirect(url_for("dash"))
     notifications_pending = supabase.table('Notificacao').select('*').eq('status', "Pendente").order('created_at', desc=True).execute()
     crp = session['crp']
-    pacients = supabase.table('Cliente').select('*').eq('crp', crp).eq('Status',"ativo").order('created_at', desc=True).execute()
-    next_event = agenda.next_event(access_token=session['google_access_token'])
-    return render_template("dashboard.html", user=session["first_name"], notifications_pending = notifications_pending.data, next_event=next_event,pacients=pacients.data)
+    pacients = supabase_admin.table('Cliente').select('*').eq('crp', crp).eq('Status',"ativo").order('created_at', desc=True).execute()
+    if session["google_access_token"]:
+        next_event = agenda.next_event(access_token=session['google_access_token'])
+        return render_template("dashboard.html", user=session["first_name"], notifications_pending = notifications_pending.data, next_event=next_event,pacients=pacients.data)
+    return render_template("dashboard.html", user=session["first_name"], notifications_pending = notifications_pending.data,pacients=pacients.data)
 
 @app.route("/clients", methods=['POST', 'GET'])
 def clients():
@@ -140,24 +143,24 @@ def clients():
         telefone = request.form["telefone"]
         telefone_adicional = request.form["telefone_adicional"]
         status = request.form["status"]
-        supabase.table('Cliente').insert({'Nome': nome, 'Sobrenome': sobrenome,\
+        supabase_admin.table('Cliente').insert({'Nome': nome, 'Sobrenome': sobrenome,\
             'telefone': telefone, 'telefone_adicional': telefone_adicional, 'crp' : crp, 'Status' : status}).execute()
         return redirect(url_for("clients"))
     if "user" not in session:
         return render_template("login.html")
-    pacients = supabase.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
+    pacients = supabase_admin.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
     return render_template("clients.html", pacients = pacients.data)
 
 @app.route("/client/<pacient_id>", methods=['POST','GET'])
 def edit_pacient(pacient_id): 
-    pacient = supabase.table('Cliente').select('*').eq('id', pacient_id).single().execute()
+    pacient = supabase_admin.table('Cliente').select('*').eq('id', pacient_id).single().execute()
     if request.method=="POST":
         nome = request.form["name"]
         sobrenome = request.form["last_name"]
         telefone = request.form["telefone"]
         telefone_adicional = request.form["telefone_adicional"]
         status = request.form["status"]
-        supabase.table('Cliente').update({'Nome': nome, 'Sobrenome': sobrenome,\
+        supabase_admin.table('Cliente').update({'Nome': nome, 'Sobrenome': sobrenome,\
             'telefone': telefone, 'telefone_adicional': telefone_adicional, 'Status' : status}).\
                 eq('id', pacient_id).execute()
         return redirect("/clients")
@@ -167,17 +170,15 @@ def edit_pacient(pacient_id):
 @app.route("/autenticar_agenda")
 def authenticate_google():
     try:
-        token = supabase.auth.admin.get_user_by_id(session["user_id"]).user.user_metadata.get("google_access_token")
-        return render_template("dashboard.html", user=session["first_name"], message="Conta Google já vinculada.")
-    except:
         google_access_token = None
         token = agenda.obtain_credentials(google_access_token)
-        supabase.auth.admin.update_user_by_id(session["user_id"], attributes={"user_metadata": {"google_access_token": token}})
-    if token:
+        supabase_admin.auth.admin.update_user_by_id(session["user_id"], attributes={"user_metadata": {"google_access_token": token}})
         session["google_access_token"] = token   
-        return render_template("dashboard.html", user=session["first_name"], message="Conta Google vinculada com sucesso!")
-    else: 
+        return redirect(url_for("dash"))
+    except:
         return render_template("dashboard.html", user=session["first_name"], message="Falha na autenticação com a conta Google. Tente novamente.")
+    # else: 
+    #     return render_template("dashboard.html", user=session["first_name"], message="Falha na autenticação com a conta Google. Tente novamente.")
 
 @app.route("/logout")
 def logout():
@@ -193,7 +194,7 @@ def default():
     google_access_token = None
     token = agenda.obtain_credentials(google_access_token)
     print(session["user_id"])
-    supabase.auth.admin.update_user_by_id(session["user_id"], attributes={"user_metadata": {"google_access_token": token}})
+    supabase_admin.auth.admin.update_user_by_id(session["user_id"], attributes={"user_metadata": {"google_access_token": token}})
     if token:
         session["google_access_token"] = token       
         return render_template("home(old).html", test=token)
@@ -211,7 +212,7 @@ def handle_notification():
         supabase.table('Notificacao').update({'status': "Aceito"}).eq('id', notification_id).execute()
         notification_content=supabase.table('Notificacao').select('*').eq('id', notification_id).single().execute()
         data=notification_content.data
-        supabase.table('Cliente').insert({'crp': crp,'Nome' : data['nome'],'Sobrenome' : data['sobrenome'],'telefone' : data['telefone'],'telefone_adicional' : data['telefone_adicional'], 'Status' : 'ativo'}).execute()
+        supabase_admin.table('Cliente').insert({'crp': crp,'Nome' : data['nome'],'Sobrenome' : data['sobrenome'],'telefone' : data['telefone'],'telefone_adicional' : data['telefone_adicional'], 'Status' : 'ativo'}).execute()
         event_data = {
             'paciente' : data['nome'] + ' ' + data['sobrenome'],
             'data' : data['data'],
@@ -222,7 +223,7 @@ def handle_notification():
         agenda.add_event(access_token=session["google_access_token"],event_data=event_data)         
         return jsonify({"status": "success", "message": "Consulta aceita."})
     elif action == "rejeitada":
-        supabase.table('Notificacao').update({'status': "Recusado"}).eq('id', notification_id).execute()
+        supabase_admin.table('Notificacao').update({'status': "Recusado"}).eq('id', notification_id).execute()
         return jsonify({"status": "success", "message": "Consulta recusada."})
     else:
         return jsonify({"status": "fail", "message": "Ação inválida."})
@@ -244,7 +245,7 @@ def get_events():
     print(dateStr)
     try:
         if "google_access_token" not in session:
-            session["google_access_token"] = supabase.auth.admin.get_user_by_id(session["user_id"]).user.user_metadata.get("google_access_token")
+            session["google_access_token"] = supabase_admin.auth.admin.get_user_by_id(session["user_id"]).user.user_metadata.get("google_access_token")
         if "google_access_token" in session:
             events = agenda.get_events(access_token=session["google_access_token"], dateStr=dateStr)
             return events
@@ -267,7 +268,7 @@ def edit_event(event_id):
     if request.method=="GET":
         try:
             if "google_access_token" not in session:
-                session["google_access_token"] = supabase.auth.admin.get_user_by_id(session["user_id"]).user.user_metadata.get("google_access_token")
+                session["google_access_token"] = supabase_admin.auth.admin.get_user_by_id(session["user_id"]).user.user_metadata.get("google_access_token")
             if "google_access_token" in session:  
                 event_details = agenda.get_specific_event(access_token=session["google_access_token"], event_id=event_id)
                 start = datetime.fromisoformat(event_details['start']['dateTime'].replace('Z','+00:00'))
@@ -289,8 +290,8 @@ def delete_event(event_id):
 @app.route("/notes",methods=['GET',"POST"])
 def notes():
     crp = session['crp']
-    pacients = supabase.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
-    notes = supabase.table('Nota').select('*, Cliente!uuid(Nome, Sobrenome)').eq('crp', crp).order('created_at', desc=True).execute()
+    pacients = supabase_admin.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
+    notes = supabase_admin.table('Nota').select('*, Cliente!uuid(Nome, Sobrenome)').eq('crp', crp).order('created_at', desc=True).execute()
     for note in notes.data:
         utc_time = datetime.fromisoformat(note['created_at'].replace('Z', '+00:00'))
         sp_time = utc_time - timedelta(hours=3)
@@ -299,7 +300,7 @@ def notes():
         titulo = request.form['titulo']
         content = request.form['editordata']
         uuid = request.form['paciente']
-        supabase.table("Nota").insert({'titulo': titulo, 'content' : content,'uuid' : uuid, 'crp' : crp}).execute()
+        supabase_admin.table("Nota").insert({'titulo': titulo, 'content' : content,'uuid' : uuid, 'crp' : crp}).execute()
         return redirect(url_for("notes"))
     return render_template("notes.html", pacients=pacients.data,notes=notes.data)
 
@@ -307,13 +308,13 @@ def notes():
 @app.route("/note/<int:note_id>", methods=['POST','GET'])
 def edit_note(note_id): 
     crp = session['crp']
-    note = supabase.table('Nota').select('*, Cliente!uuid(Nome, Sobrenome)').eq('id', note_id).eq('crp', crp).single().execute()
-    pacients = supabase.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
+    note = supabase_admin.table('Nota').select('*, Cliente!uuid(Nome, Sobrenome)').eq('id', note_id).eq('crp', crp).single().execute()
+    pacients = supabase_admin.table('Cliente').select('*').eq('crp', crp).order('created_at', desc=True).execute()
     if request.method=="POST":
         titulo = request.form['titulo']
         content = request.form['editordata']
         uuid = request.form['paciente']
-        supabase.table('Nota').update({'titulo': titulo, 'content' : content,'uuid' : uuid, 'crp' : crp}).eq('id', note_id).execute()
+        supabase_admin.table('Nota').update({'titulo': titulo, 'content' : content,'uuid' : uuid, 'crp' : crp}).eq('id', note_id).execute()
         return redirect(url_for("notes"))
     return render_template("note_data.html",pacients = pacients.data,note=note.data)
 
