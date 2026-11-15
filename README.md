@@ -15,3 +15,4 @@ O repositório está dividido na estrutura de pastas do Flask:
 
 O repositório contém as bibliotecas para execução, então é necessário apenas inicializar o programa main.py e então acessar o endereço listado no console. 
 
+Caso precise reinstalar algo, o projeto usa as bibiotecas Flask, Supabase e Google Agenda. 
